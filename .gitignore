@@ -14,6 +14,11 @@
 
 Thumbs.db*
 
+#Ignore all build files of any subdirectory
+
+**/bin/
+**/build/
+
 # Add anything else that should not be added to your repository.
 # Examples are:
 # - Object files and executables

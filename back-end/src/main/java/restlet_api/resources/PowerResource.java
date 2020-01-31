@@ -1,4 +1,4 @@
-package Restlet_server_0.resources;
+package restlet_api.resources;
 
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;

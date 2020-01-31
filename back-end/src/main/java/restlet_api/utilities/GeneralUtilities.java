@@ -1,4 +1,4 @@
-package Restlet_server_0.utilities;
+package restlet_api.utilities;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
 
-import Restlet_server_0.DatabaseManager;
+import restlet_api.DatabaseManager;
 
 public class GeneralUtilities {
 	

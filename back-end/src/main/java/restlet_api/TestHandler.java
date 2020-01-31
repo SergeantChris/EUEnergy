@@ -1,4 +1,4 @@
-package Restlet_server_0;
+package restlet_api;
 
 
 import java.io.UnsupportedEncodingException;
@@ -9,8 +9,8 @@ import org.restlet.resource.Get;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 
-import Restlet_server_0.DatabaseManager;
-import Restlet_server_0.resources.PowerResource;
+import restlet_api.DatabaseManager;
+import restlet_api.resources.PowerResource;
 
 public class TestHandler extends PowerResource{
 	@Get

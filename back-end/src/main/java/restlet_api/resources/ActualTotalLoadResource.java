@@ -1,9 +1,10 @@
-package Restlet_server_0.resources;
+package restlet_api.resources;
 
 import org.restlet.resource.Get;
 
 import com.mongodb.BasicDBObject;
-import Restlet_server_0.Queries;
+
+import restlet_api.Queries;
 
 
 public class ActualTotalLoadResource extends PowerResource{

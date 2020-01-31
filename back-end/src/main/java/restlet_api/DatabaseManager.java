@@ -1,4 +1,4 @@
-package Restlet_server_0;
+package restlet_api;
 
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;

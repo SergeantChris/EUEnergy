@@ -1,4 +1,4 @@
-package Restlet_server_0;
+package restlet_api;
 
 import org.restlet.Application;
 import org.restlet.Component;
@@ -6,11 +6,11 @@ import org.restlet.Restlet;
 import org.restlet.data.Protocol;
 import org.restlet.routing.Router;
 
-import Restlet_server_0.resources.ActualTotalLoadResource;
-import Restlet_server_0.resources.ActualvsForecastResource;
-import Restlet_server_0.resources.AggregatedGenerationPerTypeResource;
-import Restlet_server_0.resources.DayAheadTotalLoadForecastResource;
-import Restlet_server_0.utilities.GeneralUtilities;
+import restlet_api.resources.ActualTotalLoadResource;
+import restlet_api.resources.ActualvsForecastResource;
+import restlet_api.resources.AggregatedGenerationPerTypeResource;
+import restlet_api.resources.DayAheadTotalLoadForecastResource;
+import restlet_api.utilities.GeneralUtilities;
 
 public class PoweRestlet extends Application{
 	public static void main(String[] args) throws Exception {

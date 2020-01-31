@@ -19,7 +19,7 @@ Thumbs.db*
 **/bin/
 **/build/
 **/.gradle/
-backend/.settings
+**/.settings/
 #Ignore all environment-specific files
 .classpath
 .project

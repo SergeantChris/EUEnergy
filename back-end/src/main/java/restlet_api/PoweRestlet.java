@@ -34,7 +34,7 @@ public class PoweRestlet extends Application{
 	      // Create a router restlet.
 	      Router router = new Router(getContext());
 	      // Attach the resources to the router.
-	      router.attach("/{Year}/{Month}/{Day}", TestHandler.class);
+	      
 	      router.attach("/ActualTotalLoad/{AreaName}/{Resolution}/{TimeFrame}/{Date}",
 	    		  ActualTotalLoadResource.class);
 	      router.attach("/AggregatedGenerationPerType/{AreaName}/{ProductionType}/{Resolution}/{TimeFrame}/{Date}",

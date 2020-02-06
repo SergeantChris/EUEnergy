@@ -4,7 +4,7 @@ import org.restlet.resource.Get;
 
 import com.mongodb.BasicDBObject;
 
-import restlet_api.Queries;
+import restlet_api.databaseLayer.Queries;
 
 
 public class DayAheadTotalLoadForecastResource extends PowerResource{

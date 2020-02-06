@@ -1,4 +1,4 @@
-package restlet_api;
+package restlet_api.databaseLayer;
 
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;

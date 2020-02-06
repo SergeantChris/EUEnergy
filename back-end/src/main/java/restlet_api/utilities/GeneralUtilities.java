@@ -9,7 +9,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
 
-import restlet_api.DatabaseManager;
+import restlet_api.databaseLayer.DatabaseManager;
 
 public class GeneralUtilities {
 	

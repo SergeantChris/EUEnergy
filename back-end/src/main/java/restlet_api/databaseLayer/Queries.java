@@ -1,4 +1,4 @@
-package restlet_api;
+package restlet_api.databaseLayer;
 
 import org.bson.Document;
 import org.json.JSONArray;
@@ -9,6 +9,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
 
 import restlet_api.utilities.GeneralUtilities;
+import restlet_api.utilities.JsonGenerator;
 
 public class Queries {
 	

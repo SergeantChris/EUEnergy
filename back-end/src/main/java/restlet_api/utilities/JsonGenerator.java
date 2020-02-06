@@ -1,4 +1,4 @@
-package restlet_api;
+package restlet_api.utilities;
 
 import org.json.*;
 import com.mongodb.*;

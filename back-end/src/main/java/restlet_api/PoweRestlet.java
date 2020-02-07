@@ -1,15 +1,22 @@
 package restlet_api;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
+import org.restlet.data.Method;
 import org.restlet.data.Protocol;
+import org.restlet.engine.application.CorsFilter;
 import org.restlet.routing.Router;
 
 import restlet_api.resources.ActualTotalLoadResource;
 import restlet_api.resources.ActualvsForecastResource;
 import restlet_api.resources.AggregatedGenerationPerTypeResource;
 import restlet_api.resources.DayAheadTotalLoadForecastResource;
+import restlet_api.resources.LoginResource;
 import restlet_api.utilities.GeneralUtilities;
 
 public class PoweRestlet extends Application{
@@ -32,18 +39,34 @@ public class PoweRestlet extends Application{
 	
 	public Restlet createInboundRoot() {
 	      // Create a router restlet.
-	      Router router = new Router(getContext());
+		Router router = new Router(getContext());
 	      // Attach the resources to the router.
 	      
-	      router.attach("/ActualTotalLoad/{AreaName}/{Resolution}/{TimeFrame}/{Date}",
-	    		  ActualTotalLoadResource.class);
-	      router.attach("/AggregatedGenerationPerType/{AreaName}/{ProductionType}/{Resolution}/{TimeFrame}/{Date}",
-	    		  AggregatedGenerationPerTypeResource.class);
-	      router.attach("/DayAheadTotalLoadForecast/{AreaName}/{Resolution}/{TimeFrame}/{Date}",
-	    		  DayAheadTotalLoadForecastResource.class);
-	      router.attach("/ActualvsForecast/{AreaName}/{Resolution}/{TimeFrame}/{Date}",
-	    		  ActualvsForecastResource.class);
-	      // Return the root router
-	      return router;
+	  	router.attach("/ActualTotalLoad/{AreaName}/{Resolution}/{TimeFrame}/{Date}",
+			  ActualTotalLoadResource.class);
+	  	router.attach("/AggregatedGenerationPerType/{AreaName}/{ProductionType}/{Resolution}/{TimeFrame}/{Date}",
+			  AggregatedGenerationPerTypeResource.class);
+	  	router.attach("/DayAheadTotalLoadForecast/{AreaName}/{Resolution}/{TimeFrame}/{Date}",
+			  DayAheadTotalLoadForecastResource.class);
+	  	router.attach("/ActualvsForecast/{AreaName}/{Resolution}/{TimeFrame}/{Date}",
+			  ActualvsForecastResource.class);
+	  	router.attach("/Login",
+		LoginResource.class);
+      
+      // Return the root router
+      //return router;
+      
+		CorsFilter corsFilter = new CorsFilter(getContext(), router);
+		//corsFilter.setAllowedOrigins(Set.of("*"));
+		corsFilter.setAllowedOrigins(new HashSet(Arrays.asList("*")));
+		corsFilter.setAllowedCredentials(true);
+		corsFilter.setAllowedHeaders(new HashSet(Arrays.asList("User")));
+		corsFilter.setDefaultAllowedMethods(new HashSet(Arrays.asList(Method.GET, Method.PUT, Method.POST, Method.DELETE)));
+		corsFilter.setAllowingAllRequestedHeaders(true);
+		corsFilter.setSkippingResourceForCorsOptions(true);
+		corsFilter.setMaxAge(10);
+		return corsFilter;
+  
+	      
 	  }
 }

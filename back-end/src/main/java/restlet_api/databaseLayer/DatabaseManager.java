@@ -12,6 +12,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.MongoClientSettings;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bson.Document;
 
@@ -25,7 +27,12 @@ public class DatabaseManager {
 	private static DatabaseManager dbManager = null;
 	private MongoClient mongoClient;
 	private MongoDatabase db;
-
+	private static Map<String, String> activeTokens;
+	
+	public static void Init() {
+		activeTokens = new HashMap<String, String>();
+	}
+	
 	private DatabaseManager() {
 		try{
 			//db at localhost:default port
@@ -71,10 +78,6 @@ public class DatabaseManager {
 	
 	public void updItem(String coll, BasicDBObject item, BasicDBObject newItem) {
 		try {
-			/*
-			BasicDBObject temp = BasicDBObject.parse(db.getCollection(coll).find(item).first().toJson());
-			db.getCollection(coll).deleteOne(item);
-			*/
 			Document repl = new Document();
 			repl.append("$set", newItem);
 			db.getCollection(coll).updateOne(item, repl);
@@ -83,17 +86,21 @@ public class DatabaseManager {
 		}
 	}
 	
+	public boolean isActiveToken(String token) {
+		return activeTokens.containsKey(token);
+	}
+	
+	public void deleteToken(String token) {
+		activeTokens.remove(token);
+	}
+	
+	public void insertToken(String token, String username) {
+		activeTokens.put(token, username);
+	}
+	
 	public FindIterable<Document> getQueryIterable(String coll, BasicDBObject dbo){		
 		return db.getCollection(coll).find(dbo);
 	}
-	/**
-	 * 
-	 * Returns the sum of the float value represented in a field of a document iterable collection
-	 * 
-	 * @param it The iterable pointing to the collection
-	 * @param field The name of the field that contains the float value
-	 * @return Returns the sum of the field values in a String format
-	 */
 	
 	public String getFloatFieldSum(FindIterable<Document> it, String field) {
 		MongoCursor<Document> cursor = it.iterator();

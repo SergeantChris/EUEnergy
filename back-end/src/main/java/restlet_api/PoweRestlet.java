@@ -17,6 +17,7 @@ import com.mongodb.BasicDBObject;
 import restlet_api.databaseLayer.DatabaseManager;
 import restlet_api.resources.ActualTotalLoadResource;
 import restlet_api.resources.ActualvsForecastResource;
+import restlet_api.resources.AdminResource;
 import restlet_api.resources.AggregatedGenerationPerTypeResource;
 import restlet_api.resources.DayAheadTotalLoadForecastResource;
 import restlet_api.resources.LoginResource;
@@ -24,7 +25,7 @@ import restlet_api.utilities.GeneralUtilities;
 
 public class PoweRestlet extends Application{
 	public static void main(String[] args) throws Exception {
-		GeneralUtilities.Init();
+		Init();
 		runServer(8765);
 	}  
 
@@ -40,21 +41,28 @@ public class PoweRestlet extends Application{
 		component.start();
 	}
 	
+	public static void Init() {
+		GeneralUtilities.Init();
+		DatabaseManager.Init();
+	}
+	
 	public Restlet createInboundRoot() {
 	      // Create a router restlet.
 		Router router = new Router(getContext());
 	      // Attach the resources to the router.
 	      
 	  	router.attach("/ActualTotalLoad/{AreaName}/{Resolution}/{TimeFrame}/{Date}",
-			  ActualTotalLoadResource.class);
+	  			ActualTotalLoadResource.class);
 	  	router.attach("/AggregatedGenerationPerType/{AreaName}/{ProductionType}/{Resolution}/{TimeFrame}/{Date}",
-			  AggregatedGenerationPerTypeResource.class);
+	  			AggregatedGenerationPerTypeResource.class);
 	  	router.attach("/DayAheadTotalLoadForecast/{AreaName}/{Resolution}/{TimeFrame}/{Date}",
-			  DayAheadTotalLoadForecastResource.class);
+	  			DayAheadTotalLoadForecastResource.class);
 	  	router.attach("/ActualvsForecast/{AreaName}/{Resolution}/{TimeFrame}/{Date}",
-			  ActualvsForecastResource.class);
+	  			ActualvsForecastResource.class);
 	  	router.attach("/Login",
-		LoginResource.class);
+	  			LoginResource.class);
+	  	router.attach("/Admin/{Action}",
+	  			AdminResource.class);
       
       // Return the root router
       //return router;

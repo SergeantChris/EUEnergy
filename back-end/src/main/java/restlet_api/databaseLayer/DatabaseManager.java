@@ -27,10 +27,12 @@ public class DatabaseManager {
 	private static DatabaseManager dbManager = null;
 	private MongoClient mongoClient;
 	private MongoDatabase db;
-	private static Map<String, String> activeTokens;
+	private static Map<String, String> tokenUsers;
+	private static Map<String, String> userTokens;
 	
 	public static void Init() {
-		activeTokens = new HashMap<String, String>();
+		tokenUsers = new HashMap<String, String>();
+		userTokens = new HashMap<String, String>();
 	}
 	
 	private DatabaseManager() {
@@ -86,18 +88,34 @@ public class DatabaseManager {
 		}
 	}
 	
-	public boolean isActiveToken(String token) {
-		return activeTokens.containsKey(token);
+	public static boolean isActiveToken(String token) {
+		return tokenUsers.containsKey(token);
 	}
 	
-	public void deleteToken(String token) {
-		activeTokens.remove(token);
+	public static void deleteToken(String token) {
+		String user = tokenUsers.get(token);
+		tokenUsers.remove(token);
+		userTokens.remove(user);
+		System.out.println(token);
 	}
 	
-	public void insertToken(String token, String username) {
-		activeTokens.put(token, username);
+	public static void insertToken(String token, String username) {
+		if(!tokenUsers.containsKey(token))
+			tokenUsers.put(token, username);
+			userTokens.put(username, token);
 	}
 	
+	public static boolean userHasToken(String user) {
+		return userTokens.containsKey(user);
+	}
+	
+	public static String getTokenFromUsername(String username) {
+		return userTokens.get(username);
+	}
+	
+	public static String getUsernameFromToken(String token) {
+		return userTokens.get(token);
+	}
 	public FindIterable<Document> getQueryIterable(String coll, BasicDBObject dbo){		
 		return db.getCollection(coll).find(dbo);
 	}

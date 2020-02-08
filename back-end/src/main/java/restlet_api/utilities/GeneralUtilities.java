@@ -2,6 +2,7 @@ package restlet_api.utilities;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.bson.Document;
 
@@ -108,4 +109,26 @@ public class GeneralUtilities {
 	public static String getMapCodeText(int mapCodeID) {
 		return MapCodes.get(new Integer(mapCodeID));
 	}
+	
+	public static String getRandomToken() {
+		String token = "";
+		String[] parts = new String[4];
+		parts[0] = "";
+		parts[1] = "";
+		parts[2] = "";
+		parts[3] = "";
+		
+		Random r = new Random();
+		String alphabet = "QWERTYUIOPASDFGHJKLZXCVBNM0123456789";
+		
+		for(int i = 0; i < 4; i++)
+			for(int j = 0; j < 4; j++)
+				parts[i] += alphabet.charAt(r.nextInt(alphabet.length()));
+		
+		token = parts[0] + '-' + parts[1] + '-' + parts[2] + '-' + parts[3];
+		
+		return token;
+	}
+	
+	
 }

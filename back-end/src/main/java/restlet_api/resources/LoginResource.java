@@ -20,6 +20,7 @@ import org.restlet.util.Series;
 import com.mongodb.BasicDBObject;
 
 import restlet_api.databaseLayer.DatabaseManager;
+import restlet_api.utilities.GeneralUtilities;
 
 public class LoginResource extends PowerResource{
 	@Post
@@ -29,10 +30,6 @@ public class LoginResource extends PowerResource{
 		int hashpass = pass.hashCode();
 		
 		String res = "";
-		
-		//TODO replace
-		if(pass.isEmpty())
-			return "Put a pass dud\n";
 		
 		BasicDBObject uData = new BasicDBObject();
 		uData.append("Name", username);
@@ -45,7 +42,13 @@ public class LoginResource extends PowerResource{
 		if(lookup.isEmpty()) {
 			res = "Don't know you \n";
 		}else {
-			res = "Me know you\n";
+			if(!DatabaseManager.userHasToken(username)) {
+				String token = GeneralUtilities.getRandomToken();
+				DatabaseManager.insertToken(token, username);
+				res = token;
+			}else {
+				res = "Your token is " + DatabaseManager.getTokenFromUsername(username) + "\n";
+			}
 		}
 		
 		return res;

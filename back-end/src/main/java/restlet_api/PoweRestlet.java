@@ -12,6 +12,9 @@ import org.restlet.data.Protocol;
 import org.restlet.engine.application.CorsFilter;
 import org.restlet.routing.Router;
 
+import com.mongodb.BasicDBObject;
+
+import restlet_api.databaseLayer.DatabaseManager;
 import restlet_api.resources.ActualTotalLoadResource;
 import restlet_api.resources.ActualvsForecastResource;
 import restlet_api.resources.AggregatedGenerationPerTypeResource;

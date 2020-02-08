@@ -17,6 +17,12 @@ public class GeneralUtilities {
 	public static Map<Integer,String> MapCodes;
 	public static Map<Integer,String> ProductionTypeTexts;
 	public static Map<String, Integer> ProductionTypeCodes;
+	public static String STATUS_NOT_AUTHORIZED = "";
+	public static String STATUS_OUT_OF_QUOTA = "";
+	public static String STATUS_NO_DATA = "";
+	public static String STATUS_BAD_REQUEST= "";
+	public static String STATUS_OK= "";
+	
 	
 	public static void Init() {
 		MapCodes = new HashMap<Integer, String>();
@@ -52,6 +58,24 @@ public class GeneralUtilities {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		BasicDBObject status_ok = new BasicDBObject();
+		BasicDBObject status_not_authorized = new BasicDBObject();
+		BasicDBObject status_out_of_quota = new BasicDBObject();
+		BasicDBObject status_no_data = new BasicDBObject();
+		BasicDBObject status_bad_request = new BasicDBObject();
+		status_ok.append("status", "200 OK");
+		status_not_authorized.append("status", "401 Not authorized");
+		status_out_of_quota.append("status", "402 Out of quota");
+		status_no_data.append("status", "403 No data");
+		status_bad_request.append("status", "400 Bad request");
+		
+		STATUS_OK = status_ok.toJson();
+		STATUS_NOT_AUTHORIZED = status_not_authorized.toJson();
+		STATUS_OUT_OF_QUOTA = status_out_of_quota.toJson();
+		STATUS_NO_DATA = status_no_data.toJson();
+		STATUS_BAD_REQUEST = status_bad_request.toJson();
+		
 	}
 	
 	public static int getProductionTypeId(String ProductionType) {

@@ -31,6 +31,7 @@ public class ActualTotalLoadResource extends PowerResource{
 			res = Queries.getMonthResult(filter, "ActualTotalLoad");
 			break;
 		case "year":
+			res = Queries.getYearResult(filter, "ActualTotalLoad");
 			break;
 		}
 

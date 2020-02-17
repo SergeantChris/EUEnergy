@@ -28,8 +28,10 @@ public class ActualvsForecastResource extends PowerResource{
 			res = Queries.getDateResult(filter, "ActualvsForecast");
 			break;
 		case "month":
+			res = Queries.getMonthResult(filter, "ActualvsForecast");
 			break;
 		case "year":
+			res = Queries.getYearResult(filter, "ActualvsForecast");
 			break;
 		}
 

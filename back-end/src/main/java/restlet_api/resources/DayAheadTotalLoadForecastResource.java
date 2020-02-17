@@ -28,8 +28,10 @@ public class DayAheadTotalLoadForecastResource extends PowerResource{
 			res = Queries.getDateResult(filter, "DayAheadTotalLoadForecast");
 			break;
 		case "month":
+			res = Queries.getMonthResult(filter, "DayAheadTotalLoadForecast");
 			break;
 		case "year":
+			res = Queries.getYearResult(filter, "DayAheadTotalLoadForecast");
 			break;
 		}
 

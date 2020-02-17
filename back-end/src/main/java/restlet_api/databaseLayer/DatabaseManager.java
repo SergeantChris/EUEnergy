@@ -119,26 +119,36 @@ public class DatabaseManager {
 	public FindIterable<Document> getQueryIterable(String coll, BasicDBObject dbo){		
 		return db.getCollection(coll).find(dbo);
 	}
-	
-	public String getFloatFieldSum(FindIterable<Document> it, String field) {
-		MongoCursor<Document> cursor = it.iterator();
-		Double sum = new Double(0);
-		try {
-			while(cursor.hasNext()) {
-				Document temp = cursor.next();
-				sum = sum + Double.parseDouble(temp.get(field).toString());
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return sum.toString();
-	}
-	
-	AggregateIterable<Document> getGroupBySum(String coll, BasicDBObject dbo, String field, String sumfield) {
+		
+	AggregateIterable<Document> getGroupBySum(String coll, BasicDBObject dbo, BasicDBObject sort, String field, String sumfield) {
 		return db.getCollection(coll).aggregate(
 					Arrays.asList(
 							Aggregates.match(dbo),
-							Aggregates.group(field, Accumulators.sum("sum", sumfield))
+							Aggregates.group(
+									"$"+field,
+									Accumulators.first(field, "$"+field),
+									Accumulators.first("AreaTypeCodeId", "$AreaTypeCodeId"),
+									Accumulators.first("MapCodeId", "$MapCodeId"),
+									Accumulators.sum("sum", "$"+sumfield)
+							),
+							Aggregates.sort(sort)
+					)
+				); 
+	}
+	
+	AggregateIterable<Document> getGroupBySum(String coll, BasicDBObject dbo, BasicDBObject sort, String field, Document groupFields, String sumfield) {
+		return db.getCollection(coll).aggregate(
+					Arrays.asList(
+							Aggregates.match(dbo),
+							Aggregates.group(
+									groupFields,
+									Accumulators.first(field, "$"+field),
+									Accumulators.first("ProductionTypeId", "$ProductionTypeId"),
+									Accumulators.first("AreaTypeCodeId", "$AreaTypeCodeId"),
+									Accumulators.first("MapCodeId", "$MapCodeId"),
+									Accumulators.sum("sum", "$"+sumfield)
+							),
+							Aggregates.sort(sort)
 					)
 				); 
 	}

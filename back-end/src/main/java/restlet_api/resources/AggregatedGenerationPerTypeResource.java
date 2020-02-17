@@ -30,8 +30,10 @@ public class AggregatedGenerationPerTypeResource extends PowerResource{
 			res = Queries.getDateResult(filter, "AggregatedGenerationPerType");
 			break;
 		case "month":
+			res = Queries.getMonthResult(filter, "AggregatedGenerationPerType");
 			break;
 		case "year":
+			res = Queries.getYearResult(filter, "AggregatedGenerationPerType");
 			break;
 		}
 

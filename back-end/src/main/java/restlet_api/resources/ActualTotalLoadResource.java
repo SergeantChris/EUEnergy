@@ -4,7 +4,8 @@ import org.restlet.resource.Get;
 
 import com.mongodb.BasicDBObject;
 
-import restlet_api.databaseLayer.Queries;
+import restlet_api.databaseLayer.*;
+import restlet_api.utilities.GeneralUtilities;
 
 
 public class ActualTotalLoadResource extends PowerResource{
@@ -23,18 +24,30 @@ public class ActualTotalLoadResource extends PowerResource{
 				
 		String res = "";
 		
-		switch(TimeFrame) {
-		case "date":
-			res = Queries.getDateResult(filter, "ActualTotalLoad");
-			break;
-		case "month":
-			res = Queries.getMonthResult(filter, "ActualTotalLoad");
-			break;
-		case "year":
-			res = Queries.getYearResult(filter, "ActualTotalLoad");
-			break;
+		String token = getRequest().getHeaders().getFirstValue("Token");
+		Integer quota = DatabaseManager.getQuota(token);
+		
+		if(DatabaseManager.isActiveToken(token)) {
+			if(quota != 0) {
+				switch(TimeFrame) {
+				case "date":
+					res = Queries.getDateResult(filter, "ActualTotalLoad");
+					break;
+				case "month":
+					res = Queries.getMonthResult(filter, "ActualTotalLoad");
+					break;
+				case "year":
+					res = Queries.getYearResult(filter, "ActualTotalLoad");
+					break;
+				}
+				DatabaseManager.updateQuota(token, quota);
+			}
+			else
+				res = GeneralUtilities.STATUS_OUT_OF_QUOTA;
 		}
-
+		else
+			res = GeneralUtilities.STATUS_NOT_AUTHORIZED;
+		
 		return res;
 	}
 	

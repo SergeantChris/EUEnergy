@@ -29,10 +29,12 @@ public class DatabaseManager {
 	private MongoDatabase db;
 	private static Map<String, String> tokenUsers;
 	private static Map<String, String> userTokens;
+	private static Map<String, Integer> tokenQuotas;
 	
 	public static void Init() {
 		tokenUsers = new HashMap<String, String>();
 		userTokens = new HashMap<String, String>();
+		tokenQuotas = new HashMap<String, Integer>();
 	}
 	
 	private DatabaseManager() {
@@ -100,9 +102,20 @@ public class DatabaseManager {
 	}
 	
 	public static void insertToken(String token, String username) {
-		if(!tokenUsers.containsKey(token))
+		if(!tokenUsers.containsKey(token)) {
 			tokenUsers.put(token, username);
 			userTokens.put(username, token);
+			tokenQuotas.put(token, 24);
+		}
+	}
+	
+	public static int getQuota(String token) {
+		return tokenQuotas.get(token);
+	}
+	
+	public static void updateQuota(String token, Integer quota) {
+		tokenQuotas.remove(token);
+		tokenQuotas.put(token, quota-1);
 	}
 	
 	public static boolean userHasToken(String user) {

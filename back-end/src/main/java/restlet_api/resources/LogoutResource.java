@@ -11,7 +11,6 @@ public class LogoutResource extends PowerResource{
 	@Post
 	public String getPost() {
 		String token = getRequest().getHeaders().getFirstValue("Token");
-		
 		DatabaseManager.deleteToken(token);
 		return GeneralUtilities.STATUS_OK;
 	}

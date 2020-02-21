@@ -31,7 +31,7 @@ public class PoweRestlet extends Application{
 	}  
 
 	public static void runServer(int port) throws Exception {
-		// Create a component.  
+		// Create a component.
 		Component component = new Component();
 		component.getServers().add(Protocol.HTTP, port);
 		// Create an application (this class).

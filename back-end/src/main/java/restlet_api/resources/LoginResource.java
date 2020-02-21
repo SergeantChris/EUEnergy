@@ -8,6 +8,7 @@ import java.io.Writer;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
+import org.json.JSONObject;
 import org.restlet.Request;
 import org.restlet.data.Form;
 import org.restlet.data.Header;
@@ -40,17 +41,16 @@ public class LoginResource extends PowerResource{
 		lookup = DatabaseManager.getManager().getItem("Users", uData);
 		
 		if(lookup.isEmpty()) {
-			res = "Don't know you \n";
+			res = GeneralUtilities.STATUS_BAD_REQUEST;
 		}else {
 			if(!DatabaseManager.userHasToken(username)) {
 				String token = GeneralUtilities.getRandomToken();
 				DatabaseManager.insertToken(token, username);
-				res = token;
+				res = new JSONObject().put("Token", token).toString();
 			}else {
-				res = "Your token is " + DatabaseManager.getTokenFromUsername(username) + "\n";
+				res = new JSONObject().put("Token", DatabaseManager.getTokenFromUsername(username)).toString();
 			}
 		}
-		
 		return res;
 	}
 }

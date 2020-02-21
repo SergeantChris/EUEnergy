@@ -1,26 +1,20 @@
-import React from 'react';
+import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {Greet2} from './components/greet.js'
+import {Greet} from './components/greet.js'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Hello world
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+	render(){
+		return (
+			<div className="App">
+			Imprted greet.js
+			<Greet2/>
+			<Greet/>
+			</div>
+		);
+	}
 }
 
 export default App;

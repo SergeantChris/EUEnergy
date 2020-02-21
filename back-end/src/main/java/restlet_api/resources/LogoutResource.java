@@ -1,8 +1,6 @@
 package restlet_api.resources;
 
-import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
-import org.restlet.resource.Resource;
 
 import restlet_api.databaseLayer.DatabaseManager;
 import restlet_api.utilities.GeneralUtilities;

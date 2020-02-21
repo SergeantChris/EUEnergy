@@ -1,16 +1,12 @@
 package restlet_api.databaseLayer;
 
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
-import com.mongodb.MongoClientSettings;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,10 +14,6 @@ import java.util.Map;
 import org.bson.Document;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.ConnectionString;
-import com.mongodb.DBObject;
-import com.mongodb.ServerAddress;
-import com.mongodb.MongoCredential;
 
 public class DatabaseManager {
 	private static DatabaseManager dbManager = null;

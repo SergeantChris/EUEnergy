@@ -2,7 +2,6 @@ package restlet_api;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.restlet.Application;
 import org.restlet.Component;
@@ -11,8 +10,6 @@ import org.restlet.data.Method;
 import org.restlet.data.Protocol;
 import org.restlet.engine.application.CorsFilter;
 import org.restlet.routing.Router;
-
-import com.mongodb.BasicDBObject;
 
 import restlet_api.databaseLayer.DatabaseManager;
 import restlet_api.resources.ActualTotalLoadResource;

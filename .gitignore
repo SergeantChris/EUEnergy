@@ -18,7 +18,10 @@ Thumbs.db*
 
 **/bin/
 **/build/
-
+**/.gradle/
+**/.settings/
+**/.project
+**/.classpath
 # Add anything else that should not be added to your repository.
 # Examples are:
 # - Object files and executables

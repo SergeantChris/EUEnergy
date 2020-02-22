@@ -1,3 +1,14 @@
+Inside the backend folder you can directly execute:
+
 1. ./gradlew build
 
 2. ./gradlew run
+
+
+This will launch the backend and report any request received.
+
+If you want to form an HTTPS API request to the server, run a command of this form from another terminal:
+
+-curl --location --request POST 'https://localhost:8765/energy/api/...' -H 'Name: Value' --insecure
+
+where the -H attribute represents a header with name 'Name' and value 'Value'.

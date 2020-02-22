@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
-import {Greet2} from './components/greet.js'
-import {Greet} from './components/greet.js'
+import {Greet,Greet2} from './components/Greet'
+//import Welcome from './components/Welcome'
 
 
 class App extends Component {
@@ -10,8 +10,10 @@ class App extends Component {
 		return (
 			<div className="App">
 			Imprted greet.js
-			<Greet2/>
-			<Greet/>
+			<Greet name = 'George'/>
+			<Greet name = 'Christina'/>
+			<Greet name = 'Kostas'/>
+			<Greet name = 'Athina'/>
 			</div>
 		);
 	}

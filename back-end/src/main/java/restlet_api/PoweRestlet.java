@@ -1,15 +1,19 @@
 package restlet_api;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;
+import org.restlet.Server;
 import org.restlet.data.Method;
 import org.restlet.data.Protocol;
+import org.restlet.data.Parameter;
 import org.restlet.engine.application.CorsFilter;
 import org.restlet.routing.Router;
+import org.restlet.util.Series;
 
 import restlet_api.databaseLayer.DatabaseManager;
 import restlet_api.resources.ActualTotalLoadResource;
@@ -30,8 +34,16 @@ public class PoweRestlet extends Application{
 	public static void runServer(int port) throws Exception {
 		// Create a component.
 		Component component = new Component();
-		component.getServers().add(Protocol.HTTP, port);
-		// Create an application (this class).
+		Server server = component.getServers().add(Protocol.HTTPS, port);
+		Series<Parameter> parameters = server.getContext().getParameters();
+		
+		parameters.add("sslContextFactory",
+				"org.restlet.engine.ssl.DefaultSslContextFactory");
+		parameters.add("keyStorePath", "./PowerRangers.jks");
+		parameters.add("keyStorePassword", "entsoe");
+		parameters.add("keyPassword", "entsoe");
+		parameters.add("keyStoreType", "JKS");
+		
 		Application application = new PoweRestlet();
 		// Attach the application to the component with a defined contextRoot.
 		String contextRoot = "/energy/api";

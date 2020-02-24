@@ -22,6 +22,7 @@ import restlet_api.resources.AggregatedGenerationPerTypeResource;
 import restlet_api.resources.DayAheadTotalLoadForecastResource;
 import restlet_api.resources.LoginResource;
 import restlet_api.resources.LogoutResource;
+import restlet_api.resources.TestResource;
 import restlet_api.utilities.GeneralUtilities;
 
 public class PoweRestlet extends Application{
@@ -38,12 +39,16 @@ public class PoweRestlet extends Application{
 		
 		parameters.add("sslContextFactory",
 				"org.restlet.engine.ssl.DefaultSslContextFactory");
-		parameters.add("keyStorePath", "./PowerRangers.jks");
-		parameters.add("keyStorePassword", "entsoe");
-		parameters.add("keyPassword", "entsoe");
+		parameters.add("keyStorePath", "./serverX.jks");
+		parameters.add("keyStorePassword", "123456");
+		parameters.add("keyPassword", "123456");
 		parameters.add("keyStoreType", "JKS");
 		
+		//server.getContext().getParameters().add("maxTotalConnections", "50");
+		
+		
 		Application application = new PoweRestlet();
+		application.getRangeService().setEnabled(false);
 		// Attach the application to the component with a defined contextRoot.
 		String contextRoot = "/energy/api";
 		component.getDefaultHost().attach(contextRoot, application);
@@ -72,6 +77,8 @@ public class PoweRestlet extends Application{
 	  			LogoutResource.class);
 	  	router.attach("/Admin/{Action}",
 	  			AdminResource.class);
+	  	router.attach("/Test",
+	  			TestResource.class);
       
 		CorsFilter corsFilter = new CorsFilter(getContext(), router);
 		corsFilter.setAllowedOrigins(new HashSet(Arrays.asList("*")));

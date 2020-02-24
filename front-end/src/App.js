@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
-//import {Greet,Greet2} from './components/Greet'
+import {Greet,Greet2} from './components/Greet'
 //import Message from './components/Message';
 //import FunctionClick from './components/FunctionClick';
 //import ClassClick from './components/ClassClick';

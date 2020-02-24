@@ -17,7 +17,7 @@ public class LoginResource extends PowerResource{
 		String res = "";
 		
 		BasicDBObject uData = new BasicDBObject();
-		uData.append("Name", username);
+		uData.append("User", username);
 		uData.append("Pass", hashpass);
 		
 		BasicDBObject lookup = new BasicDBObject();
@@ -30,9 +30,9 @@ public class LoginResource extends PowerResource{
 			if(!DatabaseManager.userHasToken(username)) {
 				String token = GeneralUtilities.getRandomToken();
 				DatabaseManager.insertToken(token, username);
-				res = new JSONObject().put("Token", token).toString();
+				res = new JSONObject().put("Token", token).toString(1);
 			}else {
-				res = new JSONObject().put("Token", DatabaseManager.getTokenFromUsername(username)).toString();
+				res = new JSONObject().put("Token", DatabaseManager.getTokenFromUsername(username)).toString(1);
 			}
 		}
 		return res;

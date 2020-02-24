@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.bson.Document;
+import org.json.JSONObject;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
@@ -59,22 +60,22 @@ public class GeneralUtilities {
 			e.printStackTrace();
 		}
 		
-		BasicDBObject status_ok = new BasicDBObject();
-		BasicDBObject status_not_authorized = new BasicDBObject();
-		BasicDBObject status_out_of_quota = new BasicDBObject();
-		BasicDBObject status_no_data = new BasicDBObject();
-		BasicDBObject status_bad_request = new BasicDBObject();
-		status_ok.append("status", "200 OK");
-		status_not_authorized.append("status", "401 Not authorized");
-		status_out_of_quota.append("status", "402 Out of quota");
-		status_no_data.append("status", "403 No data");
-		status_bad_request.append("status", "400 Bad request");
+		JSONObject status_ok = new JSONObject();
+		JSONObject status_not_authorized = new JSONObject();
+		JSONObject status_out_of_quota = new JSONObject();
+		JSONObject status_no_data = new JSONObject();
+		JSONObject status_bad_request = new JSONObject();
+		status_ok.put("status", "200 OK");
+		status_not_authorized.put("status", "401 Not authorized");
+		status_out_of_quota.put("status", "402 Out of quota");
+		status_no_data.put("status", "403 No data");
+		status_bad_request.put("status", "400 Bad request");
 		
-		STATUS_OK = status_ok.toJson();
-		STATUS_NOT_AUTHORIZED = status_not_authorized.toJson();
-		STATUS_OUT_OF_QUOTA = status_out_of_quota.toJson();
-		STATUS_NO_DATA = status_no_data.toJson();
-		STATUS_BAD_REQUEST = status_bad_request.toJson();
+		STATUS_OK = status_ok.toString(1);
+		STATUS_NOT_AUTHORIZED = status_not_authorized.toString(1);
+		STATUS_OUT_OF_QUOTA = status_out_of_quota.toString(1);
+		STATUS_NO_DATA = status_no_data.toString(1);
+		STATUS_BAD_REQUEST = status_bad_request.toString(1);
 		
 	}
 	

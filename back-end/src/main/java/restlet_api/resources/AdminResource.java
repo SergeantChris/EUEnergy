@@ -3,8 +3,10 @@ package restlet_api.resources;
 import org.restlet.resource.Post;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.MongoWriteException;
 
 import restlet_api.databaseLayer.DatabaseManager;
+import restlet_api.utilities.GeneralUtilities;
 
 public class AdminResource extends PowerResource{
 	@Post
@@ -13,26 +15,35 @@ public class AdminResource extends PowerResource{
 		String res = "";
 		switch(action) {
 		case "users":
-			createUser();
+			res = createUser();
 			break;
 		}
 		
 		return res;
 	}
 	
-	public void createUser() {
+	public String createUser() {
+		String res = "";
 		try {
-		String username = getRequest().getHeaders().getFirstValue("User");
-		String pass = getRequest().getHeaders().getFirstValue("Pass");
-		int hashpass = pass.hashCode();
-		BasicDBObject dbo = new BasicDBObject();
-		
-		dbo.append("Name", username);
-		dbo.append("Pass", hashpass);
-		
-		DatabaseManager.getManager().addItem("Users", dbo);
+			String username = getRequest().getHeaders().getFirstValue("User");
+			String pass = getRequest().getHeaders().getFirstValue("Pass");
+			int hashpass = pass.hashCode();
+			BasicDBObject dbo = new BasicDBObject();
+			
+			dbo.append("User", username);
+			dbo.append("Pass", hashpass);
+			System.out.println("Dbo is " + dbo.toString());
+			try {
+				DatabaseManager.getManager().addItem("Users", dbo);
+				res = GeneralUtilities.STATUS_OK;
+				System.out.println("Res is OK");
+			}catch(MongoWriteException e) {
+				res =  GeneralUtilities.STATUS_BAD_REQUEST;
+				System.out.println("Res is BAD");
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		return res;
 	}
 }

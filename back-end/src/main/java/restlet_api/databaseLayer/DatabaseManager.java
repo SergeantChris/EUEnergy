@@ -56,12 +56,8 @@ public class DatabaseManager {
 	}
 	
 	public void addItem(String coll, BasicDBObject dbo) {
-		try {
-			Document doc = Document.parse(dbo.toJson());
-			db.getCollection(coll).insertOne(doc);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
+		Document doc = Document.parse(dbo.toJson());
+		db.getCollection(coll).insertOne(doc);
 	}
 	
 	public void delItem(String coll, BasicDBObject dbo) {

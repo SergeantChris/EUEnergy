@@ -7,9 +7,16 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.bson.Document;
 
@@ -21,12 +28,22 @@ public class DatabaseManager {
 	private MongoDatabase db;
 	private static Map<String, String> tokenUsers;
 	private static Map<String, String> userTokens;
-	private static Map<String, Integer> tokenQuotas;
 	
 	public static void Init() {
 		tokenUsers = new HashMap<String, String>();
 		userTokens = new HashMap<String, String>();
-		tokenQuotas = new HashMap<String, Integer>();
+		
+		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+ 
+		Long midnight = LocalDateTime.now().until(LocalDate.now().plusDays(1).atStartOfDay(), ChronoUnit.MINUTES);
+		scheduler.scheduleAtFixedRate(new DatabaseManager().updMany(
+															"Users", 
+															new BasicDBObject(), 
+															new BasicDBObject().append("Quotas", 12)
+															), 
+										midnight, 
+										TimeUnit.DAYS.toMinutes(1), 
+										TimeUnit.MINUTES);
 	}
 	
 	private DatabaseManager() {
@@ -78,6 +95,29 @@ public class DatabaseManager {
 		}
 	}
 	
+	private Runnable updMany(String coll, BasicDBObject item, BasicDBObject newItem) {
+		try {
+			Document repl = new Document();
+			repl.append("$set", newItem);
+			db.getCollection(coll).updateMany(item, repl);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static int getQuota(String username) {
+		BasicDBObject dbo = new BasicDBObject().append("User", username);
+		BasicDBObject retObj = new DatabaseManager().getItem("Users", dbo);
+		return Integer.parseInt(retObj.get("Quotas").toString());
+	}
+	
+	public static void updateQuota(String username, Integer quota) {
+		BasicDBObject dbo = new BasicDBObject().append("User", username);
+		BasicDBObject replObj = new BasicDBObject().append("Quotas", quota-1);
+		new DatabaseManager().updItem("Users", dbo, replObj);
+	}
+	
 	public static boolean isActiveToken(String token) {
 		return tokenUsers.containsKey(token);
 	}
@@ -93,17 +133,7 @@ public class DatabaseManager {
 		if(!tokenUsers.containsKey(token)) {
 			tokenUsers.put(token, username);
 			userTokens.put(username, token);
-			tokenQuotas.put(token, 24);
 		}
-	}
-	
-	public static int getQuota(String token) {
-		return tokenQuotas.get(token);
-	}
-	
-	public static void updateQuota(String token, Integer quota) {
-		tokenQuotas.remove(token);
-		tokenQuotas.put(token, quota-1);
 	}
 	
 	public static boolean userHasToken(String user) {

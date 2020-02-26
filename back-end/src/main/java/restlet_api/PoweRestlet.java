@@ -22,7 +22,6 @@ import restlet_api.resources.AggregatedGenerationPerTypeResource;
 import restlet_api.resources.DayAheadTotalLoadForecastResource;
 import restlet_api.resources.LoginResource;
 import restlet_api.resources.LogoutResource;
-import restlet_api.resources.TestResource;
 import restlet_api.utilities.GeneralUtilities;
 
 public class PoweRestlet extends Application{
@@ -77,8 +76,6 @@ public class PoweRestlet extends Application{
 	  			LogoutResource.class);
 	  	router.attach("/Admin/{Action}",
 	  			AdminResource.class);
-	  	router.attach("/Test",
-	  			TestResource.class);
       
 		CorsFilter corsFilter = new CorsFilter(getContext(), router);
 		corsFilter.setAllowedOrigins(new HashSet(Arrays.asList("*")));

@@ -25,7 +25,8 @@ public class ActualTotalLoadResource extends PowerResource{
 		String res = "";
 		
 		String token = getRequest().getHeaders().getFirstValue("Token");
-		Integer quota = DatabaseManager.getQuota(token);
+		String username = getRequest().getHeaders().getFirstValue("User");
+		Integer quota = DatabaseManager.getQuota(username);
 		
 		if(DatabaseManager.isActiveToken(token)) {
 			if(quota != 0) {
@@ -40,7 +41,7 @@ public class ActualTotalLoadResource extends PowerResource{
 					res = Queries.getYearResult(filter, "ActualTotalLoad");
 					break;
 				}
-				DatabaseManager.updateQuota(token, quota);
+				DatabaseManager.updateQuota(username, quota);
 			}
 			else
 				res = GeneralUtilities.STATUS_OUT_OF_QUOTA;

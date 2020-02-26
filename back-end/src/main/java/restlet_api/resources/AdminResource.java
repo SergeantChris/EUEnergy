@@ -32,6 +32,7 @@ public class AdminResource extends PowerResource{
 			
 			dbo.append("User", username);
 			dbo.append("Pass", hashpass);
+			dbo.append("Quotas", 12);
 			System.out.println("Dbo is " + dbo.toString());
 			try {
 				DatabaseManager.getManager().addItem("Users", dbo);

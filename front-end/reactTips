@@ -10,7 +10,7 @@ setState
 		count: prevState.count +1
 	}))
 
-Lifecycle Methods
+Lifecycle Methods:
 
 	1. Mounting: an istance of a component is being created & insered into the DOM
 	constuctor -- static getDerivedStateDromProps -- render -- componentDidMount -> (this is where you load the data)	
@@ -23,3 +23,10 @@ Lifecycle Methods
 
 	4. Error Handling: Error during rendering, a lifecycle method, in the construcrtor od any child component
 	static getDerivedStateFromError -- componentDidCatch
+
+		a) static getDerivedStateFromError -> render a fallback UI after an Error
+		b) componentDidCatch -> log the error information 
+
+Higher order comoponents
+	A function takes a component as an argument and returns a new component -> adds functionality
+	

@@ -9,6 +9,7 @@ import {Greet,Greet2} from './components/Greet'
 import ParentComponent from './components/ParentComponent';
 import NameList from './components/NameList';
 import RefsDemo from './components/RefsDemo';
+import ClickCounter from './components/ClickCounter';
 //import Welcome from './components/Welcome'
 
 

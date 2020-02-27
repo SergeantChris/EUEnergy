@@ -4,7 +4,9 @@ import org.restlet.resource.Get;
 
 import com.mongodb.BasicDBObject;
 
+import restlet_api.databaseLayer.DatabaseManager;
 import restlet_api.databaseLayer.Queries;
+import restlet_api.utilities.GeneralUtilities;
 
 
 public class ActualvsForecastResource extends PowerResource{
@@ -23,17 +25,30 @@ public class ActualvsForecastResource extends PowerResource{
 		
 		String res = "";
 		
-		switch(TimeFrame) {
-		case "date":
-			res = Queries.getDateResult(filter, "ActualvsForecast");
-			break;
-		case "month":
-			res = Queries.getMonthResult(filter, "ActualvsForecast");
-			break;
-		case "year":
-			res = Queries.getYearResult(filter, "ActualvsForecast");
-			break;
+		String token = getRequest().getHeaders().getFirstValue("Token");
+		String username = DatabaseManager.getUsernameFromToken(token);
+		Integer quota = DatabaseManager.getQuota(username);
+		
+		if(DatabaseManager.isActiveToken(token)) {
+			if(quota != 0) {		
+				switch(TimeFrame) {
+				case "date":
+					res = Queries.getDateResult(filter, "ActualvsForecast");
+					break;
+				case "month":
+					res = Queries.getMonthResult(filter, "ActualvsForecast");
+					break;
+				case "year":
+					res = Queries.getYearResult(filter, "ActualvsForecast");
+					break;
+				}
+				DatabaseManager.updateQuota(username, quota);
+			}
+			else
+				res = GeneralUtilities.STATUS_OUT_OF_QUOTA;
 		}
+		else
+			res = GeneralUtilities.STATUS_NOT_AUTHORIZED;
 
 		return res;
 	}

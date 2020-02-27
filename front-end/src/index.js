@@ -1,12 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import 'bootstrap';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+localStorage.clear();
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const userData = {
+    token: localStorage.getItem('token'),
+    username: localStorage.getItem('username')
+};
+
+console.log(userData);
+
+ReactDOM.render(<App userData={userData} />, document.getElementById('root'));

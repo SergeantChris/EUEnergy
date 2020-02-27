@@ -1,34 +1,61 @@
-import React, {Component} from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import { HashRouter as Router, Route, Redirect } from "react-router-dom";
 import './App.css';
-import {Greet,Greet2} from './components/Greet'
-//import Message from './components/Message';
-//import FunctionClick from './components/FunctionClick';
-//import ClassClick from './components/ClassClick';
-//import EventBind from './components/EventBind';
-import ParentComponent from './components/ParentComponent';
-import NameList from './components/NameList';
-import RefsDemo from './components/RefsDemo';
-import ClickCounter from './components/ClickCounter';
-//import Welcome from './components/Welcome'
-
+import Nav from './Nav';
+import Main from './Main';
+//import Footer from './Footer';
+import { Logout } from './Auth';
+import { UserProvider } from './UserContext';
+import Welcome from './components/Welcome'
 
 class App extends Component {
-	render(){
-		return (
-			<div className="App">
-			Imported greet.js
-			<Greet name = 'George'/>
-			<Greet name = 'Christina'/>
-			<Greet name = 'Kostas'/>
-			<Greet name = 'Athina'/>
 
-			<ClickCounter />
+  constructor(props) {
+    super(props)
+    this.state = {
+      token: props.userData.token,
+      username: props.userData.username,
+      style: {
+        backgroundColor:'#fff',
+        height:'100vh'
+      },
+      setUserData: (token, username) => this.setState({
+        token: token,
+        username: username
+      }),
+    };
+  }
 
-			<img src = {logo} className = "App-logo" alt = "logo" />
-			</div>
-		);
-	}
+  renderProtectedComponent(ProtectedComponent) {
+    if (this.state.username !== null) {
+      return  (props) => <ProtectedComponent {...props} />;
+    }
+    else {
+      return (props) => <Redirect to='/' />;
+    }
+  }
+
+  render() {
+    return (
+        <div style={this.state.style}>
+          <UserProvider value={this.state}>
+            <Router>
+              <Nav />
+              <div className = "container" style ={cont}>
+                <Route path="/" exact component = {Welcome} />
+                <Route path="/main" render={this.renderProtectedComponent(Main)} />
+                {/*<Route path="/login" component={Login} />*/}
+                <Route path="/logout" render={this.renderProtectedComponent(Logout)} />
+              </div>
+            </Router>
+          </UserProvider>
+        </div>
+    );
+  }
+}
+
+const cont = {
+  paddingTop:20
 }
 
 export default App;

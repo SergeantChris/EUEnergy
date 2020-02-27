@@ -25,7 +25,7 @@ public class ActualTotalLoadResource extends PowerResource{
 		String res = "";
 		
 		String token = getRequest().getHeaders().getFirstValue("Token");
-		String username = getRequest().getHeaders().getFirstValue("User");
+		String username = DatabaseManager.getUsernameFromToken(token);
 		Integer quota = DatabaseManager.getQuota(username);
 		
 		if(DatabaseManager.isActiveToken(token)) {

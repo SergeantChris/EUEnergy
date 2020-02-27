@@ -23,8 +23,9 @@ export class Welcome extends Component {
                                             <p>This app helps you see the energy consumtion through out europe. Again checking the length of this line in each case:
                                                 logge in or not. This is small sooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo </p>
                                             <p>{context.username?'':guest} </p>
+                                            {context.token}
                                         </td>
-                                        {context.username?null:<td><Login props = {this.props}/></td>}
+                                        {context.username?null:<td><Login navProps = {this.props}/></td>}
                                     </React.Fragment>
                                 }
                         </UserConsumer>    

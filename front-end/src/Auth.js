@@ -19,42 +19,46 @@ export class Login extends Component {
         const p = this.password.current.value;
         console.log('Submitting...', u, p);
 
-        /*
-        fetch('https://localhost:8765/energy/api/Login',{
+        
+        fetch('http://localhost:8765/energy/api/Login',{
             method: 'POST',
             headers: {
                 'Content-Type':'application/x-www-form-urlencoded',
+                "User": u,
+                "Pass": p
             },
             body: new URLSearchParams({
-                "username": u,
-                "password": p
+                
             })
         }).then((response) => response.json())
-        .then(json => {   
+        .then(json => {    
             
-            console.log(json);
-            
-            //store the user's data in local storage
+            console.log("Response json:",json.Token);
+            if(json.Token){
+                            //store the user's data in local storage
             //to make them available for the next
             //user's visit
-            localStorage.setItem('token', json.token);
+            localStorage.setItem('token', json.Token);
             localStorage.setItem('username', u);
             
             //use the setUserData function available
             //through the UserContext
-            this.context.setUserData(json.token, u);
+            this.context.setUserData(json.Token, u);
             
             //use the history prop available through
             //the Route to programmatically navigate
             //to another route            
-            this.props.history.push('/main');
+            this.props.navProps.history.push('/main');
+            }
+
         }); 
-        */
-        localStorage.setItem('token', 'token');
+        /*
+       localStorage.setItem('token', 'token');
         localStorage.setItem('username', u);
         this.context.setUserData('token', u);
-        this.props.props.history.push('/main');
-        event.preventDefault();
+        this.props.history.push('/main');
+        */
+        
     }
     
     render() {       

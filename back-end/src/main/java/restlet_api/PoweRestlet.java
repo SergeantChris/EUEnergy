@@ -33,16 +33,16 @@ public class PoweRestlet extends Application{
 	public static void runServer(int port) throws Exception {
 		// Create a component.
 		Component component = new Component();
-		Server server = component.getServers().add(Protocol.HTTPS, port);
+		Server server = component.getServers().add(Protocol.HTTP, port);
 		Series<Parameter> parameters = server.getContext().getParameters();
-		
+		/*
 		parameters.add("sslContextFactory",
 				"org.restlet.engine.ssl.DefaultSslContextFactory");
 		parameters.add("keyStorePath", "./serverX.jks");
 		parameters.add("keyStorePassword", "123456");
 		parameters.add("keyPassword", "123456");
 		parameters.add("keyStoreType", "JKS");
-		
+		*/
 		//server.getContext().getParameters().add("maxTotalConnections", "50");
 		
 		

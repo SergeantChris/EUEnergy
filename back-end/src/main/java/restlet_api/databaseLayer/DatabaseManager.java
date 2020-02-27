@@ -32,18 +32,12 @@ public class DatabaseManager {
 	public static void Init() {
 		tokenUsers = new HashMap<String, String>();
 		userTokens = new HashMap<String, String>();
-		
-		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
- 
-		Long midnight = LocalDateTime.now().until(LocalDate.now().plusDays(1).atStartOfDay(), ChronoUnit.MINUTES);
-		scheduler.scheduleAtFixedRate(new DatabaseManager().updMany(
-															"Users", 
-															new BasicDBObject(), 
-															new BasicDBObject().append("Quotas", 12)
-															), 
-										midnight, 
-										TimeUnit.DAYS.toMinutes(1), 
-										TimeUnit.MINUTES);
+
+		(new Thread(new Runnable() {
+			public void run() {
+				periodUpd();
+			}
+		})).start();
 	}
 	
 	private DatabaseManager() {
@@ -95,7 +89,7 @@ public class DatabaseManager {
 		}
 	}
 	
-	private Runnable updMany(String coll, BasicDBObject item, BasicDBObject newItem) {
+	private void updMany(String coll, BasicDBObject item, BasicDBObject newItem) {
 		try {
 			Document repl = new Document();
 			repl.append("$set", newItem);
@@ -103,7 +97,22 @@ public class DatabaseManager {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+	}
+	
+	private static void periodUpd() {
+		try {
+			while(true) {
+				TimeUnit.MINUTES.sleep(4);
+				new DatabaseManager().updMany(
+						"Users", 
+						new BasicDBObject(), 
+						new BasicDBObject().append("Quotas", 12)
+						);
+				System.out.println("Quota updated");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static int getQuota(String username) {
@@ -145,7 +154,7 @@ public class DatabaseManager {
 	}
 	
 	public static String getUsernameFromToken(String token) {
-		return userTokens.get(token);
+		return tokenUsers.get(token);
 	}
 	public FindIterable<Document> getQueryIterable(String coll, BasicDBObject dbo){		
 		return db.getCollection(coll).find(dbo);

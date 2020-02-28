@@ -34,8 +34,8 @@ public class PoweRestlet extends Application{
 	public static void runServer(int port) throws Exception {
 		// Create a component.
 		Component component = new Component();
-		Server server = component.getServers().add(Protocol.HTTP, port);
-		Series<Parameter> parameters = server.getContext().getParameters();
+		//Server server = component.getServers().add(Protocol.HTTPS, port);
+		//Series<Parameter> parameters = server.getContext().getParameters();
 		/*
 		parameters.add("sslContextFactory",
 				"org.restlet.engine.ssl.DefaultSslContextFactory");
@@ -81,13 +81,12 @@ public class PoweRestlet extends Application{
 	  			TestResource.class);
       
 		CorsFilter corsFilter = new CorsFilter(getContext(), router);
-		corsFilter.setAllowedOrigins(new HashSet(Arrays.asList("*")));
+		corsFilter.setAllowedOrigins(new HashSet<String>(Arrays.asList("*")));
 		corsFilter.setAllowedCredentials(true);
-		corsFilter.setAllowedHeaders(new HashSet(Arrays.asList("*")));
-		corsFilter.setDefaultAllowedMethods(new HashSet(Arrays.asList(Method.GET, Method.PUT, Method.POST, Method.DELETE)));
+		corsFilter.setAllowedHeaders(new HashSet<String>(Arrays.asList("*")));
+		corsFilter.setDefaultAllowedMethods(new HashSet<Method>(Arrays.asList(Method.GET, Method.PUT, Method.POST, Method.DELETE)));
 		corsFilter.setAllowingAllRequestedHeaders(true);
 		corsFilter.setSkippingResourceForCorsOptions(true);
-		// TODO
 		corsFilter.setMaxAge(10);
 		return corsFilter;
   

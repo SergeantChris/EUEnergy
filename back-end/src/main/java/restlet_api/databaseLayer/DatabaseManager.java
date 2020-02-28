@@ -156,6 +156,16 @@ public class DatabaseManager {
 	public static String getUsernameFromToken(String token) {
 		return tokenUsers.get(token);
 	}
+	
+	public boolean isAdmin(String token) {
+		boolean res = false;
+		if(DatabaseManager.isActiveToken(token))
+			if(DatabaseManager.getUsernameFromToken(token).equals("admin"))
+					res = true;
+			
+		return res;
+	}
+	
 	public FindIterable<Document> getQueryIterable(String coll, BasicDBObject dbo){		
 		return db.getCollection(coll).find(dbo);
 	}

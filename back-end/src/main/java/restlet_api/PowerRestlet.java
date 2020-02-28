@@ -20,12 +20,14 @@ import restlet_api.resources.ActualvsForecastResource;
 import restlet_api.resources.AdminResource;
 import restlet_api.resources.AggregatedGenerationPerTypeResource;
 import restlet_api.resources.DayAheadTotalLoadForecastResource;
+import restlet_api.resources.HealthCheckResource;
 import restlet_api.resources.LoginResource;
 import restlet_api.resources.LogoutResource;
+import restlet_api.resources.ResetResource;
 import restlet_api.resources.TestResource;
 import restlet_api.utilities.GeneralUtilities;
 
-public class PoweRestlet extends Application{
+public class PowerRestlet extends Application{
 	public static void main(String[] args) throws Exception {
 		Init();
 		runServer(8765);
@@ -47,7 +49,7 @@ public class PoweRestlet extends Application{
 		//server.getContext().getParameters().add("maxTotalConnections", "50");
 		
 		
-		Application application = new PoweRestlet();
+		Application application = new PowerRestlet();
 		application.getRangeService().setEnabled(false);
 		// Attach the application to the component with a defined contextRoot.
 		String contextRoot = "/energy/api";
@@ -79,6 +81,10 @@ public class PoweRestlet extends Application{
 	  			AdminResource.class);
 	  	router.attach("/Test",
 	  			TestResource.class);
+	  	router.attach("/Reset",
+	  			ResetResource.class);
+	  	router.attach("/HealthCheck",
+	  			HealthCheckResource.class);
       
 		CorsFilter corsFilter = new CorsFilter(getContext(), router);
 		corsFilter.setAllowedOrigins(new HashSet<String>(Arrays.asList("*")));

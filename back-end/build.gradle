@@ -33,4 +33,4 @@ dependencies {
 	testImplementation 'junit:junit:4.12'
 }
 
-mainClassName = 'restlet_api.PoweRestlet'
+mainClassName = 'restlet_api.PowerRestlet'

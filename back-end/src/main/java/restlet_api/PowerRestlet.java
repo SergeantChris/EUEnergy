@@ -36,7 +36,7 @@ public class PowerRestlet extends Application{
 	public static void runServer(int port) throws Exception {
 		// Create a component.
 		Component component = new Component();
-		//Server server = component.getServers().add(Protocol.HTTPS, port);
+		Server server = component.getServers().add(Protocol.HTTP, port);
 		//Series<Parameter> parameters = server.getContext().getParameters();
 		/*
 		parameters.add("sslContextFactory",

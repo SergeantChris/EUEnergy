@@ -14,6 +14,8 @@ import org.restlet.engine.application.CorsFilter;
 import org.restlet.routing.Router;
 import org.restlet.util.Series;
 
+import com.mongodb.BasicDBObject;
+
 import restlet_api.databaseLayer.DatabaseManager;
 import restlet_api.resources.ActualTotalLoadResource;
 import restlet_api.resources.ActualvsForecastResource;
@@ -24,6 +26,7 @@ import restlet_api.resources.HealthCheckResource;
 import restlet_api.resources.LoginResource;
 import restlet_api.resources.LogoutResource;
 import restlet_api.resources.ResetResource;
+import restlet_api.resources.RestoreDefaultsResource;
 import restlet_api.resources.TestResource;
 import restlet_api.utilities.GeneralUtilities;
 
@@ -85,6 +88,8 @@ public class PowerRestlet extends Application{
 	  			ResetResource.class);
 	  	router.attach("/HealthCheck",
 	  			HealthCheckResource.class);
+	  	router.attach("/RestoreDefaults",
+	  			RestoreDefaultsResource.class);
       
 		CorsFilter corsFilter = new CorsFilter(getContext(), router);
 		corsFilter.setAllowedOrigins(new HashSet<String>(Arrays.asList("*")));

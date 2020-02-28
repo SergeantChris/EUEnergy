@@ -1,6 +1,7 @@
 package restlet_api.databaseLayer;
 
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
@@ -74,6 +75,14 @@ public class DatabaseManager {
 	public void delItem(String coll, BasicDBObject dbo) {
 		try {
 			db.getCollection(coll).deleteOne(dbo);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void delManyItems(String coll, BasicDBObject dbo) {
+		try {
+			db.getCollection(coll).deleteMany(dbo);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -157,7 +166,7 @@ public class DatabaseManager {
 		return tokenUsers.get(token);
 	}
 	
-	public boolean isAdmin(String token) {
+	public static boolean isAdmin(String token) {
 		boolean res = false;
 		if(DatabaseManager.isActiveToken(token))
 			if(DatabaseManager.getUsernameFromToken(token).equals("admin"))
@@ -201,6 +210,11 @@ public class DatabaseManager {
 							Aggregates.sort(sort)
 					)
 				); 
+	}
+	
+	public void dropCollection(String coll) {
+		MongoCollection<Document> myColl = db.getCollection(coll);
+		myColl.drop();
 	}
 	
 }

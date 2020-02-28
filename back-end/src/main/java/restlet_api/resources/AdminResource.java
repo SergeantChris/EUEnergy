@@ -13,12 +13,20 @@ public class AdminResource extends PowerResource{
 	public String getPost() {
 		String action = getMandatoryAttribute("Action", "Action");
 		String res = "";
-		switch(action) {
-		case "users":
-			res = createUser();
-			break;
+		String token = getRequest().getHeaders().getFirstValue("Token");
+		if(DatabaseManager.isActiveToken(token)) {
+			if(DatabaseManager.getUsernameFromToken(token).equals("admin")) {
+				switch(action) {
+				case "users":
+					res = createUser();
+					break;
+				}
+			}
+			else
+				res = GeneralUtilities.STATUS_NOT_AUTHORIZED;
 		}
-		
+		else
+			res = GeneralUtilities.STATUS_NOT_AUTHORIZED;		
 		return res;
 	}
 	

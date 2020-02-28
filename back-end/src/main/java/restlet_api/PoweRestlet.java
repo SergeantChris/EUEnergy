@@ -87,6 +87,7 @@ public class PoweRestlet extends Application{
 		corsFilter.setDefaultAllowedMethods(new HashSet(Arrays.asList(Method.GET, Method.PUT, Method.POST, Method.DELETE)));
 		corsFilter.setAllowingAllRequestedHeaders(true);
 		corsFilter.setSkippingResourceForCorsOptions(true);
+		// TODO
 		corsFilter.setMaxAge(10);
 		return corsFilter;
   

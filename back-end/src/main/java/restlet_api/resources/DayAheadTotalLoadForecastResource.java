@@ -26,10 +26,10 @@ public class DayAheadTotalLoadForecastResource extends PowerResource{
 		String res = "";
 		
 		String token = getRequest().getHeaders().getFirstValue("Token");
-		String username = DatabaseManager.getUsernameFromToken(token);
-		Integer quota = DatabaseManager.getQuota(username);
 		
 		if(DatabaseManager.isActiveToken(token)) {
+			String username = DatabaseManager.getUsernameFromToken(token);
+			Integer quota = DatabaseManager.getQuota(username);
 			if(quota != 0) {
 				switch(TimeFrame) {
 				case "date":

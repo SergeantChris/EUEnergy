@@ -1,5 +1,7 @@
 package restlet_api.utilities;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -153,6 +155,23 @@ public class GeneralUtilities {
 		token = parts[0] + '-' + parts[1] + '-' + parts[2] + '-' + parts[3];
 		
 		return token;
+	}
+	
+	public static void executeSystemCommand(String cmd) {
+		try {
+			String s;
+			Process p;
+			p = Runtime.getRuntime().exec(cmd);
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(p.getInputStream()));
+			while((s = br.readLine()) != null) {
+				System.out.println(s);
+			}
+			p.waitFor();
+			p.destroy();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

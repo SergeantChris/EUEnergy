@@ -1,0 +1,74 @@
+[
+    {
+      "value": 1,
+      "label": "Biomass"
+    },
+    {
+      "value": 2,
+      "label": "Fossil Brown coal/Lig"
+    },
+    {
+      "value": 3,
+      "label": "Fossil Coal-derived gas"
+    },
+    {
+        "value": 4,
+        "label": "Fossil Gas"
+    },
+    {
+        "value": 5,
+        "label": "Fossil Hard coal"
+    },
+    {
+        "value": 6,
+        "label": "Fossil Oil"
+    },
+    {
+        "value": 7,
+        "label": "Fossil Oil shale"
+    },
+    {
+        "value": 8,
+        "label": "Fossil Peat"
+    },
+    {
+        "value": 9,
+        "label": "Geothermal"
+    },
+    {
+        "value": 10,
+        "label": "Hydro Pumped Storage"
+    },
+    {
+        "value": 11,
+        "label": "Hydro Run-of-river and poundage"
+    },
+    {
+        "value": 12,
+        "label": "Hydro Water Reservoir"
+    },
+    {
+        "value": 13,
+        "label": "Nuclear"
+    },
+    {
+        "value": 14,
+        "label": "Waste"
+    },
+    {
+        "value": 15,
+        "label": "Wind Offshore"
+    },
+    {
+        "value": 16,
+        "label": "Solar"
+    },
+    {
+        "value": 17,
+        "label": "Other renewable"
+    },
+    {
+        "value": 18,
+        "label": "Other"
+    }
+  ]

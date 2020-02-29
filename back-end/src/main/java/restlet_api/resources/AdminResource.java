@@ -136,8 +136,13 @@ public class AdminResource extends PowerResource{
 			try {
 				BasicDBObject doc =  DatabaseManager.getManager().getItem("Users", filter);
 				String token = DatabaseManager.getTokenFromUsername(username);
+				int quotas = DatabaseManager.getQuota(username);
+				doc.remove("_id");
 				doc.append("Token", token);
-				res = GeneralUtilities.STATUS_OK + doc.toJson();
+				doc.append("Quotas", quotas);
+				doc.append("Next_quota_refresh_seconds", DatabaseManager.getTimeTillRefresh());
+				doc.append("status", "200 OK");
+				res = doc.toJson();
 				System.out.println("Res is OK");
 			}catch(MongoWriteException e) {
 				res =  GeneralUtilities.STATUS_BAD_REQUEST;

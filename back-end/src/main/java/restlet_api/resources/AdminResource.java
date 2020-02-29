@@ -134,7 +134,8 @@ public class AdminResource extends PowerResource{
 			try {
 				BasicDBObject doc =  DatabaseManager.getManager().getItem("Users", filter);
 				String token = DatabaseManager.getTokenFromUsername(username);
-				res = GeneralUtilities.STATUS_OK + doc.toString() + token;
+				doc.append("Token", token);
+				res = GeneralUtilities.STATUS_OK + doc.toJson();
 				System.out.println("Res is OK");
 			}catch(MongoWriteException e) {
 				res =  GeneralUtilities.STATUS_BAD_REQUEST;

@@ -9,15 +9,9 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.bson.Document;
@@ -26,7 +20,7 @@ import com.mongodb.BasicDBObject;
 
 public class DatabaseManager {
 	private static DatabaseManager dbManager = null;
-	public static Timestamp lastQuotaUpdate;
+	public static long lastQuotaUpdate;
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 	private static Map<String, String> tokenUsers;
@@ -35,7 +29,7 @@ public class DatabaseManager {
 	public static void Init() {
 		tokenUsers = new HashMap<String, String>();
 		userTokens = new HashMap<String, String>();
-		lastQuotaUpdate = new Timestamp(0);
+		lastQuotaUpdate = System.currentTimeMillis()/1000;
 		(new Thread(new Runnable() {
 			public void run() {
 				periodUpd();
@@ -120,11 +114,16 @@ public class DatabaseManager {
 						new BasicDBObject().append("Quotas", 12)
 						);
 				System.out.println("Quota updated");
-				lastQuotaUpdate = new Timestamp(System.currentTimeMillis()/1000);
+				lastQuotaUpdate = System.currentTimeMillis()/1000;
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static int getTimeTillRefresh() {
+		long timePassed = System.currentTimeMillis()/1000 - lastQuotaUpdate;
+		return (int) (4*60-timePassed);
 	}
 	
 	public static int getQuota(String username) {

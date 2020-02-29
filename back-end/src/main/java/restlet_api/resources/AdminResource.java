@@ -93,6 +93,7 @@ public class AdminResource extends PowerResource{
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+			res = GeneralUtilities.STATUS_BAD_REQUEST;
 		}
 		return res;
 	}
@@ -122,6 +123,7 @@ public class AdminResource extends PowerResource{
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+			res = GeneralUtilities.STATUS_BAD_REQUEST;
 		}
 		return res;
 	}

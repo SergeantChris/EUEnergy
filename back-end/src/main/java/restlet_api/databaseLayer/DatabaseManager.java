@@ -9,6 +9,7 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -25,6 +26,7 @@ import com.mongodb.BasicDBObject;
 
 public class DatabaseManager {
 	private static DatabaseManager dbManager = null;
+	public static Timestamp lastQuotaUpdate;
 	private MongoClient mongoClient;
 	private MongoDatabase db;
 	private static Map<String, String> tokenUsers;
@@ -33,7 +35,7 @@ public class DatabaseManager {
 	public static void Init() {
 		tokenUsers = new HashMap<String, String>();
 		userTokens = new HashMap<String, String>();
-
+		lastQuotaUpdate = new Timestamp(0);
 		(new Thread(new Runnable() {
 			public void run() {
 				periodUpd();
@@ -118,6 +120,7 @@ public class DatabaseManager {
 						new BasicDBObject().append("Quotas", 12)
 						);
 				System.out.println("Quota updated");
+				lastQuotaUpdate = new Timestamp(System.currentTimeMillis()/1000);
 			}
 		}catch(Exception e) {
 			e.printStackTrace();

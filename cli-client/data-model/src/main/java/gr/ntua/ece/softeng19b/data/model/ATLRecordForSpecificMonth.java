@@ -1,8 +1,11 @@
 package gr.ntua.ece.softeng19b.data.model;
 
+import java.util.List;
+
 public class ATLRecordForSpecificMonth extends AbstractEntsoeRecord {
 
-    private double actualTotalLoadByDayValue;
+	private List<ATLRecordForSpecificDay> listRecords;
+	private double actualTotalLoadByDayValue;
 
     public ATLRecordForSpecificMonth() {
         super(DataSet.ActualTotalLoad);

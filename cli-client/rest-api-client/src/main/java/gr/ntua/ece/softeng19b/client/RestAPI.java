@@ -1,6 +1,8 @@
 package gr.ntua.ece.softeng19b.client;
 
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
+import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.User;
 
 import javax.net.ssl.SSLContext;
@@ -31,7 +33,7 @@ public class RestAPI {
     private static final String MULTIPART_FORM_DATA = "multipart/form-data";
 
     public static final String BASE_URL = "/energy/api";
-    public static final String CUSTOM_HEADER = "X-OBSERVATORY-AUTH";
+    public static final String CUSTOM_HEADER = "Token";
 
     static {
         System.setProperty("jdk.internal.httpclient.disableHostnameVerification", "true");
@@ -55,14 +57,62 @@ public class RestAPI {
         }
         this.urlPrefix = "https://" + host + ":" + port + BASE_URL;
     }
-
+//----------------------------------URL-------------------------------------------------------
     String urlForActualDataLoad(String areaName, String resolutionCode, LocalDate date, Format format) {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
         String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
         return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/date/" + date.toString() +
                 "?format=" + format.name().toLowerCase();
     }
+    
+    String urlForActualDataLoad(String areaName, String resolutionCode, String dateArg, String date, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        String encDateArg  = URLEncoder.encode(dateArg, StandardCharsets.UTF_8);
+        String encDate     = URLEncoder.encode(date, StandardCharsets.UTF_8);
+        
+        
+        return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/" + encDateArg + "/" + encDate +
+                "?format=" + format.name().toLowerCase();
+    }
 
+    
+    String urlForAggregatedGenerationPreType(String areaName, String productionType,String resolutionCode, String dateArg, String date, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        String encDateArg  = URLEncoder.encode(dateArg, StandardCharsets.UTF_8);
+        String encProdType  = URLEncoder.encode(productionType, StandardCharsets.UTF_8);
+        String encDate     = URLEncoder.encode(date, StandardCharsets.UTF_8);
+        
+        
+        return urlPrefix + "/AggregatedGenerationPerType/" + encAreaName  +"/" + encProdType + "/" + encResCode + "/" + encDateArg + "/" + encDate +
+                "?format=" + format.name().toLowerCase();
+    }
+    
+    String urlForDayAheadTotalLoadForecast(String areaName, String resolutionCode, String dateArg, String date, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        String encDateArg  = URLEncoder.encode(dateArg, StandardCharsets.UTF_8);
+        String encDate     = URLEncoder.encode(date, StandardCharsets.UTF_8);
+        
+        
+        return urlPrefix + "/DayAheadTotalLoadForecast/" + encAreaName + "/" + encResCode + "/" + encDateArg + "/" + encDate +
+                "?format=" + format.name().toLowerCase();
+    }
+    String urlForActualvsForecast(String areaName, String resolutionCode, String dateArg, String date, Format format) {
+        String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
+        String encResCode  = URLEncoder.encode(resolutionCode, StandardCharsets.UTF_8);
+        String encDateArg  = URLEncoder.encode(dateArg, StandardCharsets.UTF_8);
+        String encDate     = URLEncoder.encode(date, StandardCharsets.UTF_8);
+        
+        
+        return urlPrefix + "/ActualvsForecast/" + encAreaName + "/" + encResCode + "/" + encDateArg + "/" + encDate +
+                "?format=" + format.name().toLowerCase();
+    }
+    
+    
+    
+    
     String urlForHealthCheck() {
         return urlPrefix + "/HealthCheck";
     }
@@ -86,6 +136,11 @@ public class RestAPI {
     String urlForImport(String dataSet) {
         return urlPrefix + "/Admin/" + URLEncoder.encode(dataSet, StandardCharsets.UTF_8);
     }
+//-----------------------------------------END URL-------------------------------------------------------
+//-----------------------------------------Request-------------------------------------------------------    
+    private String newGetRequestJson(String url) {
+    	return "GET url:" + url;
+    }
 
     private HttpRequest newGetRequest(String url) {
         return newRequest("GET", url, URL_ENCODED, HttpRequest.BodyPublishers.noBody());
@@ -99,10 +154,7 @@ public class RestAPI {
         return newRequest("PUT", url, contentType, bodyPublisher);
     }
 
-    private HttpRequest newRequest(String method,
-                                   String url,
-                                   String contentType,
-                                   HttpRequest.BodyPublisher bodyPublisher) {
+    private HttpRequest newRequest(String method, String url, String contentType, HttpRequest.BodyPublisher bodyPublisher) {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
         if (token != null) {
             builder.header(CUSTOM_HEADER, token);
@@ -113,6 +165,7 @@ public class RestAPI {
                 uri(URI.create(url)).
                 build();
     }
+//------------------------------------END Request-------------------------------------------------------
 
     private <T> T sendRequestAndParseResponseBodyAsUTF8Text(Supplier<HttpRequest> requestSupplier,
                                                             Function<Reader, T> bodyProcessor) {
@@ -142,7 +195,7 @@ public class RestAPI {
             throw new ConnectionException(e.getMessage(), e);
         }
     }
-
+//---------------------------------------------Functions------------------------------------------------------
     public boolean isLoggedIn() {
         return token != null;
     }
@@ -169,6 +222,7 @@ public class RestAPI {
             () -> newPostRequest(urlForLogin(), URL_ENCODED, ofUrlEncodedFormData(formData)),
             ClientHelper::parseJsonToken
         );
+        System.out.println("successful login, token:" + token);
     }
 
     public void logout() {
@@ -178,7 +232,9 @@ public class RestAPI {
         );
         token = null;
     }
-
+//--------------------------------------END Functions----------------------------------------------------
+//--------------------------------------Admin Functions--------------------------------------------------
+    
     public User addUser(String username, String email, String password, int quota) {
         Map<String, String> formData = new LinkedHashMap<>();
         formData.put("username", username);
@@ -219,19 +275,37 @@ public class RestAPI {
             ClientHelper::parseJsonImportResult
         );
     }
+//-------------------------------------End Admin Functions------------------------------------------------------- 
+    
 
-
+    public String getActualTotalLoad(String areaName,String resolutionCode,String dateArg, String date, Format format) {
+        return newGetRequestJson(urlForActualDataLoad(areaName, resolutionCode, dateArg, date, format));
+    }
+    
     public List<ATLRecordForSpecificDay> getActualTotalLoad(String areaName,
-                                                            String resolutionCode,
-                                                            LocalDate date,
-                                                            Format format) {
-        return sendRequestAndParseResponseBodyAsUTF8Text(
-            () -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, date, format)),
-            format::consumeActualTotalLoadRecordsForSpecificDay
-        );
+											            String resolutionCode,
+											            LocalDate date,
+											            Format format) {
+    	return sendRequestAndParseResponseBodyAsUTF8Text(
+    			() -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, date, format)),
+    			format::consumeActualTotalLoadRecordsForSpecificDay
+    			);
+    }
+    
+    public String getAggregatedGenerationPerType(String areaName, String productionType,String resolutionCode, String dateArg,String date, Format format) {
+        return newGetRequestJson(urlForAggregatedGenerationPreType(areaName, productionType, resolutionCode, dateArg, date, format));
+    }
+    
+    public String getDayAheadTotalLoadForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
+        return newGetRequestJson(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, dateArg, date, format));
+    }
+    
+    public String getActualvsForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
+        return newGetRequestJson(urlForActualvsForecast(areaName, resolutionCode, dateArg, date, format));
     }
 
-
+    
+//------------------------------------------HTTP things------------------------------------------
     //Helper method to create a new http client that can tolerate self-signed or improper ssl certificates
     private static HttpClient newHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sslContext = SSLContext.getInstance("TLS");

@@ -11,6 +11,7 @@ repositories {
 }
 
 dependencies {
+	compile 'org.json:json:20171018'
     implementation project(':data-model'),
                    project(':rest-api-client'),
                    'info.picocli:picocli:4.1.4'
@@ -18,7 +19,7 @@ dependencies {
 
 application {
     applicationName = "energy_TEAM"
-    mainClassName = 'gr.ntua.ece.softeng19b.cli.App'
+    mainClassName = 'cli.App'
 }
 
 run {

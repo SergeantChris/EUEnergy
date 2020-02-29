@@ -1,4 +1,4 @@
-package gr.ntua.ece.softeng19b.cli;
+package cli;
 
 import static picocli.CommandLine.Option;
 

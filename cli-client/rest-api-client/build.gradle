@@ -1,13 +1,18 @@
 plugins {
     // Apply the groovy plugin to add support for both Java and Groovy
-    id 'groovy'
+    //id 'groovy'
+    id 'java'
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
-    jcenter()
+    mavenCentral()
+	jcenter()
+			maven {
+				url "https://maven.restlet.talend.com/"
+			}
 }
 
 dependencies {
@@ -21,9 +26,6 @@ dependencies {
 
     testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5',
     'com.github.tomakehurst:wiremock-jre8:2.25.1'
-}
-repositories {
-	maven { url "http://maven.restlet.org" }
 }
 
 test {

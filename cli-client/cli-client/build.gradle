@@ -7,7 +7,11 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
+	jcenter()
+			maven {
+				url "https://maven.restlet.talend.com/"
+			}
 }
 
 dependencies {

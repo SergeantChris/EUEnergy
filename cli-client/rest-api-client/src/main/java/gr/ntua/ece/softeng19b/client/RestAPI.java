@@ -67,7 +67,7 @@ public class RestAPI {
         catch(NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e.getMessage());
         }
-        this.urlPrefix = "https://" + host + ":" + port + BASE_URL;
+        this.urlPrefix = "http://" + host + ":" + port + BASE_URL;
     }
 //----------------------------------URL-------------------------------------------------------
     String urlForActualDataLoad(String areaName, String resolutionCode, LocalDate date, Format format) {
@@ -84,8 +84,7 @@ public class RestAPI {
         String encDate     = URLEncoder.encode(date, StandardCharsets.UTF_8);
         
         
-        return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/" + encDateArg + "/" + encDate +
-                "?format=" + format.name().toLowerCase();
+        return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/" + encDateArg + "/" + encDate;
     }
 
     
@@ -151,18 +150,24 @@ public class RestAPI {
 //-----------------------------------------END URL-------------------------------------------------------
 //-----------------------------------------Request-------------------------------------------------------    
     private String newPowerRequest(String url,String Method, Map<String, String> params) {
-    	
+    	String res = "";
     	Client client = new Client(Protocol.HTTP);
     	ClientResource cr = new ClientResource(url);
+    	//System.out.println("Url is: " + url + '\n');
     	Request req = cr.getRequest();
-    	//req.setMethod();
+    	
     	Series<Header> headers = new Series<Header>(Header.class);
     	req.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, headers);
+    	//headers.add("Token", "1234-1234-1234-1234");
+    	//System.out.println("Set the headers");
     	
-    	for(String key : params.keySet()) {
-    		String val = params.get(key);
-    		headers.add(key, val);
-    	}
+    	if(params != null)
+    	if(!params.isEmpty())
+	    	for(String key : params.keySet()) {
+	    		String val = params.get(key);
+	    		headers.add(key, val);
+	    	}
+    	
     	
     	switch(Method) {
     	case "GET": cr.get(MediaType.APPLICATION_JSON);
@@ -173,9 +178,17 @@ public class RestAPI {
     		break;
     	}
     	
-    	Representation resp = cr.getResponseEntity();
     	
-    	return "Answer:\n" + resp.toString() + '\n';
+    	Representation resp = cr.getResponseEntity();
+    	String text = "";
+    	try {
+    		text = resp.getText();
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	
+    	res += "Rest API Response:\n\n" + text + '\n';
+    	return res;
     }
 
     private HttpRequest newGetRequest(String url) {

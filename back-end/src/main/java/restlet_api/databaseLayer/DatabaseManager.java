@@ -107,11 +107,16 @@ public class DatabaseManager {
 	private static void periodUpd() {
 		try {
 			while(true) {
-				TimeUnit.MINUTES.sleep(4);
+				TimeUnit.MINUTES.sleep(1);
 				new DatabaseManager().updMany(
 						"Users", 
-						new BasicDBObject(), 
-						new BasicDBObject().append("Quotas", 12)
+						new BasicDBObject().append("User", new BasicDBObject().append("$ne", "admin")), 
+						new BasicDBObject().append("Quotas", 10)
+						);
+				new DatabaseManager().updItem(
+						"Users", 
+						new BasicDBObject().append("User", new BasicDBObject().append("$eq", "admin")), 
+						new BasicDBObject().append("Quotas", 50)
 						);
 				System.out.println("Quota updated");
 				lastQuotaUpdate = System.currentTimeMillis()/1000;

@@ -148,7 +148,7 @@ public class RestAPI {
     }
 //-----------------------------------------END URL-------------------------------------------------------
 //-----------------------------------------Request-------------------------------------------------------    
-    private JSONObject newPowerRequest(String url,String Method, Map<String, String> params) {
+    private String newPowerRequest(String url,String Method, Map<String, String> params) {
     	String res = "";
     	Client client = new Client(Protocol.HTTP);
     	ClientResource cr = new ClientResource(url);
@@ -253,12 +253,20 @@ public class RestAPI {
             ClientHelper::parseJsonStatus
         );
     }
+    
+    public String myHealthCheck() {
+        return newPowerRequest(urlForHealthCheck(),"GET",null);
+    }
 
     public String resetDatabase() {
         return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newPostRequest(urlForReset(), URL_ENCODED, HttpRequest.BodyPublishers.noBody()),
             ClientHelper::parseJsonStatus
         );
+    }
+    
+    public String myResetDatabase() {
+        return newPowerRequest(urlForReset(),"POST",null);
     }
 
     public void login(String username, String password) {
@@ -320,9 +328,10 @@ public class RestAPI {
             ClientHelper::parseJsonImportResult
         );
     }
-//-------------------------------------End Admin Functions-------------------------------------------------------     
+//-------------------------------------End Admin Functions------------------------------------------------------- 
     
-    public JSONObject getActualTotalLoad(String areaName,String resolutionCode,String dateArg, String date, Format format) {
+    
+    public String getActualTotalLoad(String areaName,String resolutionCode,String dateArg, String date, Format format) {
         return newPowerRequest(urlForActualDataLoad(areaName, resolutionCode, dateArg, date, format),"GET", null);
     }
     
@@ -333,15 +342,15 @@ public class RestAPI {
     			);
     }
     
-    public JSONObject getAggregatedGenerationPerType(String areaName, String productionType,String resolutionCode, String dateArg,String date, Format format) {
+    public String getAggregatedGenerationPerType(String areaName, String productionType,String resolutionCode, String dateArg,String date, Format format) {
         return newPowerRequest(urlForAggregatedGenerationPreType(areaName, productionType, resolutionCode, dateArg, date, format),"GET",null);
     }
     
-    public JSONObject getDayAheadTotalLoadForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
+    public String getDayAheadTotalLoadForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
         return newPowerRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, dateArg, date, format),"GET",null);
     }
     
-    public JSONObject getActualvsForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
+    public String getActualvsForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
         return newPowerRequest(urlForActualvsForecast(areaName, resolutionCode, dateArg, date, format),"GET",null);
     }
 

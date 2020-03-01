@@ -27,7 +27,7 @@ public class TestResource extends PowerResource{
 	        if (MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), true)) {
 	            // 1/ Create a factory for disk-based file items
 	            DiskFileItemFactory factory = new DiskFileItemFactory();
-	            factory.setSizeThreshold(1000240);
+	            factory.setSizeThreshold(1000000240);
 
 	            // 2/ Create a new file upload handler based on the Restlet
 	            // FileUpload extension that will parse Restlet requests and

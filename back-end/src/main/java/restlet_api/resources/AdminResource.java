@@ -203,21 +203,31 @@ public class AdminResource extends PowerResource{
 	                    BufferedReader br = new BufferedReader(
 	                            new InputStreamReader(fi.openStream()));
 	                    String line = null;
+	                    long totalRecordsImported = 0;
 	                    while ((line = br.readLine()) != null) {
 	                        sb.append(line);
 	                        sb.append('\n');
+	                        totalRecordsImported++;
 	                    }
 	                    sb.append("\n");
 	                    System.out.println(sb.toString());
 	                    writer.write(sb.toString());
 	                    writer.close();
 	                    
-	                    DatabaseManager.getManager().dropCollection(coll);
+	                    //DatabaseManager.getManager().dropCollection(coll);
 	                    GeneralUtilities.executeSystemCommand("./mongoInsertCSV theFile.csv "+coll);
 	                    
 	                    theFile.delete();
 	                    
-	                    result = GeneralUtilities.STATUS_OK;
+	                    long totalRecordsInFile = DatabaseManager.getManager().getCount(coll);
+	                    long totalRecordsInDatabase = DatabaseManager.getManager().getAllCount();
+	                    BasicDBObject resObj = new BasicDBObject();
+	                    resObj.append("totalRecordsInFile", totalRecordsInFile);
+	                    resObj.append("totalRecordsImported", totalRecordsImported);
+	                    resObj.append("totalRecordsInDatabase", totalRecordsInDatabase);
+	                    resObj.append("status", "200 OK");
+	                    
+	                    result = resObj.toJson();
 	                }
 	            }
 	        } else {

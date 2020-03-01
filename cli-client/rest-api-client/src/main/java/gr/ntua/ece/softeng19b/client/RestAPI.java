@@ -1,9 +1,8 @@
 package gr.ntua.ece.softeng19b.client;
 
 import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
-import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificMonth;
-import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificYear;
 import gr.ntua.ece.softeng19b.data.model.User;
+import gr.ntua.ece.softeng19b.client.*;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -296,15 +295,13 @@ public class RestAPI {
         );
     }
 
-    public User updateUser(User updatedUser) {
+    public String updateUser(String username,String password,String email,int quota) {
         //only email and/or quota can be updated
         Map<String, String> formData = new LinkedHashMap<>();
-        formData.put("email", updatedUser.getEmail());
-        formData.put("requestsPerDayQuota", String.valueOf(updatedUser.getRequestsPerDayQuota()));
-        return sendRequestAndParseResponseBodyAsUTF8Text(
-            () -> newPutRequest(urlForUpdateUser(updatedUser.getUsername()), URL_ENCODED, ofUrlEncodedFormData(formData)),
-            ClientHelper::parseJsonUser
-        );
+        formData.put("email", email);
+        formData.put("Pass", password);
+        formData.put("Quotas", String.valueOf(quota));
+        return newPowerRequest(urlForUpdateUser(username),"PUT",formData);
     }
 
     public User getUser(String username) {
@@ -327,14 +324,16 @@ public class RestAPI {
 //-------------------------------------End Admin Functions------------------------------------------------------- 
     
 
+    public List<ATLRecordForSpecificDay> getActualTotalLoadDay(String areaName, String resolutionCode,String date,Format format){
+    	consumeActualTotalLoadRecordsForSpecificDay(getActualTotalLoad(areaName, resolutionCode, "date", date, format));
+    }
+    
+    
     public String getActualTotalLoad(String areaName,String resolutionCode,String dateArg, String date, Format format) {
         return newPowerRequest(urlForActualDataLoad(areaName, resolutionCode, dateArg, date, format),"GET", null);
     }
     
-    public List<ATLRecordForSpecificDay> getActualTotalLoad(String areaName,
-											            String resolutionCode,
-											            LocalDate date,
-											            Format format) {
+    public List<ATLRecordForSpecificDay> getActualTotalLoad(String areaName, String resolutionCode,LocalDate date,Format format) {
     	return sendRequestAndParseResponseBodyAsUTF8Text(
     			() -> newGetRequest(urlForActualDataLoad(areaName, resolutionCode, date, format)),
     			format::consumeActualTotalLoadRecordsForSpecificDay

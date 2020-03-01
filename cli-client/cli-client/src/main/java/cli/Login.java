@@ -1,5 +1,7 @@
 package cli;
 
+import java.security.MessageDigest;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 import gr.ntua.ece.softeng19b.client.RestAPI;

@@ -30,7 +30,8 @@ import cli.ApiUtil;
         DayAheadTotalLoadForecast.class,
         ActualvsForecast.class,
         Login.class,
-        Logout.class
+        Logout.class,
+        Admin.class
     }
 )
 
@@ -54,17 +55,23 @@ public class App implements Callable<Integer> {
         	
 	        command = in.nextLine();
 	        
-	        
-	        commandLine.execute(ApiUtil.splitArgs(command));
-	        
-	        if (commandLine.getParseResult().subcommand() == null) {
-	        	commandLine.usage(System.out);
-	        }
-	        
 	        if(command.equals("exit")) {
 	        	in.close();
 	        	System.exit(0);
 	        }
+
+	        if(command.equals("-h")) {
+	        	commandLine.usage(System.out);
+	        	continue;
+	        }
+	        
+	        commandLine.execute(ApiUtil.splitArgs(command));
+	     
+	        
+	        if (commandLine.getParseResult().subcommand() == null) {
+	        	commandLine.usage(System.out);
+	        }
+	       
         }
         
     }

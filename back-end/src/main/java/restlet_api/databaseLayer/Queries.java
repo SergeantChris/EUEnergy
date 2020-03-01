@@ -18,7 +18,7 @@ public class Queries {
 	
 	
 	
-	public static String getDateResult(BasicDBObject filter, String dataset) {
+	public static JSONArray getDateResult(BasicDBObject filter, String dataset) {
 					
 		BasicDBObject dbo = new BasicDBObject();
 		dbo.append("AreaName", filter.get("AreaName"));
@@ -94,13 +94,13 @@ public class Queries {
 			}
 		}
 		
-		return dbo.toJson() + '\n' + jsarr.toString(1);
+		return jsarr;
 	}
 	
 	
 	// TODO: getMonth and getYear can be one method
 	
-	public static String getMonthResult(BasicDBObject filter, String dataset) {
+	public static JSONArray getMonthResult(BasicDBObject filter, String dataset) {
 		BasicDBObject dbo = new BasicDBObject();
 		dbo.append("AreaName", filter.get("AreaName"));
 		dbo.append("ResolutionCodeId", GeneralUtilities.getResolutionCodeId(filter.get("Resolution").toString()));
@@ -187,12 +187,12 @@ public class Queries {
 			}
 		}
 		
-		return dbo.toJson() + '\n' + jsarr.toString(1);
+		return jsarr;
 	}
 	
 	
 	
-	public static String getYearResult(BasicDBObject filter, String dataset) {
+	public static JSONArray getYearResult(BasicDBObject filter, String dataset) {
 		BasicDBObject dbo = new BasicDBObject();
 		dbo.append("AreaName", filter.get("AreaName"));
 		dbo.append("ResolutionCodeId", GeneralUtilities.getResolutionCodeId(filter.get("Resolution").toString()));
@@ -277,6 +277,6 @@ public class Queries {
 			}
 		}
 		
-		return dbo.toJson() + '\n' + jsarr.toString(1);
+		return jsarr;
 	}
 }

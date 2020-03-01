@@ -1,14 +1,25 @@
 package restlet_api.utilities;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import org.bson.Document;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema.Builder;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
@@ -174,5 +185,46 @@ public class GeneralUtilities {
 		}
 	}
 	
-	
+	public static String csvFromJson(JSONArray jarr){
+		String res = "";
+		try {
+			File jsoFile = new File("iasonas.json");
+			FileWriter jsoWr = new FileWriter("iasonas.json");
+			jsoWr.write(jarr.toString());
+			//System.out.println("Just wrote: " + jarr.toString(1));
+			jsoWr.close();
+			JsonNode jsonTree = new ObjectMapper().readTree(new File("iasonas.json"));
+			Builder csvSchemaBuilder = CsvSchema.builder();
+			JsonNode firstObject = jsonTree.elements().next();
+			
+			File csvFile = new File("csvFromJson.csv");
+			
+			firstObject.fieldNames().forEachRemaining(fieldName -> {csvSchemaBuilder.addColumn(fieldName);} );
+			CsvSchema csvSchema = csvSchemaBuilder.build().withHeader();
+			CsvMapper csvMapper = new CsvMapper();
+			csvMapper.writerFor(JsonNode.class)
+			  .with(csvSchema)
+			  .writeValue(csvFile, jsonTree);
+			
+			
+			FileReader fr = new FileReader("csvFromJson.csv");
+			BufferedReader br=new BufferedReader(fr);  //creates a buffering character input stream  
+			StringBuffer sb=new StringBuffer();    //constructs a string buffer with no characters  
+			String line;
+			while((line=br.readLine())!=null) {
+				sb.append(line);
+				sb.append("\n");
+			}
+			fr.close();
+			jsoFile.delete();
+			csvFile.delete();
+			
+			res = sb.toString();
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
 }

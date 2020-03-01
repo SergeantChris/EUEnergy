@@ -1,5 +1,6 @@
 package restlet_api.resources;
 
+import org.json.JSONArray;
 import org.restlet.resource.Get;
 
 import com.mongodb.BasicDBObject;
@@ -18,6 +19,8 @@ public class AggregatedGenerationPerTypeResource extends PowerResource{
 		String TimeFrame = getMandatoryAttribute("TimeFrame", "TimeFrame");
 		String Date = getMandatoryAttribute("Date", "Date");
 		
+		String type = getRequest().getResourceRef().getQueryAsForm().getFirstValue("type");
+		
 		BasicDBObject filter = new BasicDBObject();
 		filter.append("AreaName", AreaName);
 		filter.append("ProductionType", ProductionType);
@@ -26,7 +29,7 @@ public class AggregatedGenerationPerTypeResource extends PowerResource{
 		filter.append("Date", Date);
 		
 		String res = "";
-		
+		JSONArray jarr = new JSONArray();
 		String token = getRequest().getHeaders().getFirstValue("Token");
 		
 		if(DatabaseManager.isActiveToken(token)) {
@@ -35,13 +38,13 @@ public class AggregatedGenerationPerTypeResource extends PowerResource{
 			if(quota != 0) {		
 				switch(TimeFrame) {
 				case "date":
-					res = Queries.getDateResult(filter, "AggregatedGenerationPerType");
+					jarr = Queries.getDateResult(filter, "AggregatedGenerationPerType");
 					break;
 				case "month":
-					res = Queries.getMonthResult(filter, "AggregatedGenerationPerType");
+					jarr = Queries.getMonthResult(filter, "AggregatedGenerationPerType");
 					break;
 				case "year":
-					res = Queries.getYearResult(filter, "AggregatedGenerationPerType");
+					jarr = Queries.getYearResult(filter, "AggregatedGenerationPerType");
 					break;
 				}
 				DatabaseManager.updateQuota(username, quota);
@@ -52,6 +55,12 @@ public class AggregatedGenerationPerTypeResource extends PowerResource{
 		else
 			res = GeneralUtilities.STATUS_NOT_AUTHORIZED;
 
+		if(type.equals("csv")) {
+			res = GeneralUtilities.csvFromJson(jarr);
+		}else {
+			res = jarr.toString(1);
+		}
+		
 		return res;
 	}
 }

@@ -1,5 +1,6 @@
 package restlet_api.resources;
 
+import org.json.JSONArray;
 import org.restlet.resource.Get;
 
 import com.mongodb.BasicDBObject;
@@ -15,7 +16,9 @@ public class ActualTotalLoadResource extends PowerResource{
 		String Resolution = getMandatoryAttribute("Resolution", "Resolution");
 		String TimeFrame = getMandatoryAttribute("TimeFrame", "TimeFrame");
 		String Date = getMandatoryAttribute("Date", "Date");
-				
+		
+		String type = getRequest().getResourceRef().getQueryAsForm().getFirstValue("type");
+		
 		BasicDBObject filter = new BasicDBObject();
 		filter.append("AreaName", AreaName);
 		filter.append("Resolution", Resolution);
@@ -23,6 +26,8 @@ public class ActualTotalLoadResource extends PowerResource{
 		filter.append("Date", Date);
 				
 		String res = "";
+		
+		JSONArray jarr = new JSONArray();
 		
 		String token = getRequest().getHeaders().getFirstValue("Token");
 		
@@ -32,13 +37,13 @@ public class ActualTotalLoadResource extends PowerResource{
 			if(quota != 0) {
 				switch(TimeFrame) {
 				case "date":
-					res = Queries.getDateResult(filter, "ActualTotalLoad");
+					jarr = Queries.getDateResult(filter, "ActualTotalLoad");
 					break;
 				case "month":
-					res = Queries.getMonthResult(filter, "ActualTotalLoad");
+					jarr = Queries.getMonthResult(filter, "ActualTotalLoad");
 					break;
 				case "year":
-					res = Queries.getYearResult(filter, "ActualTotalLoad");
+					jarr = Queries.getYearResult(filter, "ActualTotalLoad");
 					break;
 				}
 				DatabaseManager.updateQuota(username, quota);
@@ -48,6 +53,12 @@ public class ActualTotalLoadResource extends PowerResource{
 		}
 		else
 			res = GeneralUtilities.STATUS_NOT_AUTHORIZED;
+		
+		if(type.equals("csv")) {
+			res = GeneralUtilities.csvFromJson(jarr);
+		}else {
+			res = jarr.toString(1);
+		}
 		
 		return res;
 	}

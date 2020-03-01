@@ -1,5 +1,6 @@
 package restlet_api.resources;
 
+import org.json.JSONArray;
 import org.restlet.resource.Get;
 
 import com.mongodb.BasicDBObject;
@@ -17,6 +18,8 @@ public class ActualvsForecastResource extends PowerResource{
 		String TimeFrame = getMandatoryAttribute("TimeFrame", "TimeFrame");
 		String Date = getMandatoryAttribute("Date", "Date");
 		
+		String type = getRequest().getResourceRef().getQueryAsForm().getFirstValue("type");
+		
 		BasicDBObject filter = new BasicDBObject();
 		filter.append("AreaName", AreaName);
 		filter.append("Resolution", Resolution);
@@ -24,7 +27,7 @@ public class ActualvsForecastResource extends PowerResource{
 		filter.append("Date", Date);
 		
 		String res = "";
-		
+		JSONArray jarr = new JSONArray();
 		String token = getRequest().getHeaders().getFirstValue("Token");
 		
 		if(DatabaseManager.isActiveToken(token)) {
@@ -33,13 +36,13 @@ public class ActualvsForecastResource extends PowerResource{
 			if(quota != 0) {		
 				switch(TimeFrame) {
 				case "date":
-					res = Queries.getDateResult(filter, "ActualvsForecast");
+					jarr = Queries.getDateResult(filter, "ActualvsForecast");
 					break;
 				case "month":
-					res = Queries.getMonthResult(filter, "ActualvsForecast");
+					jarr = Queries.getMonthResult(filter, "ActualvsForecast");
 					break;
 				case "year":
-					res = Queries.getYearResult(filter, "ActualvsForecast");
+					jarr = Queries.getYearResult(filter, "ActualvsForecast");
 					break;
 				}
 				DatabaseManager.updateQuota(username, quota);
@@ -50,6 +53,12 @@ public class ActualvsForecastResource extends PowerResource{
 		else
 			res = GeneralUtilities.STATUS_NOT_AUTHORIZED;
 
+		if(type.equals("csv")) {
+			res = GeneralUtilities.csvFromJson(jarr);
+		}else {
+			res = jarr.toString(1);
+		}
+		
 		return res;
 	}
 }

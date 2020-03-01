@@ -1,5 +1,6 @@
 package restlet_api.resources;
 
+import org.json.JSONArray;
 import org.restlet.resource.Get;
 
 import com.mongodb.BasicDBObject;
@@ -17,6 +18,8 @@ public class DayAheadTotalLoadForecastResource extends PowerResource{
 		String TimeFrame = getMandatoryAttribute("TimeFrame", "TimeFrame");
 		String Date = getMandatoryAttribute("Date", "Date");
 		
+		String type = getRequest().getResourceRef().getQueryAsForm().getFirstValue("type");
+		
 		BasicDBObject filter = new BasicDBObject();		
 		filter.append("AreaName", AreaName);
 		filter.append("Resolution", Resolution);
@@ -24,7 +27,7 @@ public class DayAheadTotalLoadForecastResource extends PowerResource{
 		filter.append("Date", Date);
 		
 		String res = "";
-		
+		JSONArray jarr = new JSONArray();
 		String token = getRequest().getHeaders().getFirstValue("Token");
 		
 		if(DatabaseManager.isActiveToken(token)) {
@@ -33,13 +36,13 @@ public class DayAheadTotalLoadForecastResource extends PowerResource{
 			if(quota != 0) {
 				switch(TimeFrame) {
 				case "date":
-					res = Queries.getDateResult(filter, "DayAheadTotalLoadForecast");
+					jarr = Queries.getDateResult(filter, "DayAheadTotalLoadForecast");
 					break;
 				case "month":
-					res = Queries.getMonthResult(filter, "DayAheadTotalLoadForecast");
+					jarr = Queries.getMonthResult(filter, "DayAheadTotalLoadForecast");
 					break;
 				case "year":
-					res = Queries.getYearResult(filter, "DayAheadTotalLoadForecast");
+					jarr = Queries.getYearResult(filter, "DayAheadTotalLoadForecast");
 					break;
 				}
 				DatabaseManager.updateQuota(username, quota);
@@ -50,6 +53,12 @@ public class DayAheadTotalLoadForecastResource extends PowerResource{
 		else
 			res = GeneralUtilities.STATUS_NOT_AUTHORIZED;
 
+		
+		if(type.equals("csv")) {
+			res = GeneralUtilities.csvFromJson(jarr);
+		}else {
+			res = jarr.toString(1);
+		}
 		return res;
 	}
 }

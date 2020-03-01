@@ -3,6 +3,8 @@ package restlet_api;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Restlet;

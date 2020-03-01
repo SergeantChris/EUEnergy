@@ -148,7 +148,7 @@ public class RestAPI {
     }
 //-----------------------------------------END URL-------------------------------------------------------
 //-----------------------------------------Request-------------------------------------------------------    
-    private String newPowerRequest(String url,String Method, Map<String, String> params) {
+    private JSONObject newPowerRequest(String url,String Method, Map<String, String> params) {
     	String res = "";
     	Client client = new Client(Protocol.HTTP);
     	ClientResource cr = new ClientResource(url);
@@ -186,8 +186,7 @@ public class RestAPI {
     		e.printStackTrace();
     	}
     	
-    	res += "Rest API Response:\n\n" + text + '\n';
-    	return res;
+    	return new JSONObject(text);
     }
 
     private HttpRequest newGetRequest(String url) {
@@ -295,7 +294,7 @@ public class RestAPI {
         );
     }
 
-    public String updateUser(String username,String password,String email,int quota) {
+    public JSONObject updateUser(String username,String password,String email,int quota) {
         //only email and/or quota can be updated
         Map<String, String> formData = new LinkedHashMap<>();
         formData.put("email", email);
@@ -321,15 +320,9 @@ public class RestAPI {
             ClientHelper::parseJsonImportResult
         );
     }
-//-------------------------------------End Admin Functions------------------------------------------------------- 
+//-------------------------------------End Admin Functions-------------------------------------------------------     
     
-
-    public List<ATLRecordForSpecificDay> getActualTotalLoadDay(String areaName, String resolutionCode,String date,Format format){
-    	consumeActualTotalLoadRecordsForSpecificDay(getActualTotalLoad(areaName, resolutionCode, "date", date, format));
-    }
-    
-    
-    public String getActualTotalLoad(String areaName,String resolutionCode,String dateArg, String date, Format format) {
+    public JSONObject getActualTotalLoad(String areaName,String resolutionCode,String dateArg, String date, Format format) {
         return newPowerRequest(urlForActualDataLoad(areaName, resolutionCode, dateArg, date, format),"GET", null);
     }
     
@@ -340,15 +333,15 @@ public class RestAPI {
     			);
     }
     
-    public String getAggregatedGenerationPerType(String areaName, String productionType,String resolutionCode, String dateArg,String date, Format format) {
+    public JSONObject getAggregatedGenerationPerType(String areaName, String productionType,String resolutionCode, String dateArg,String date, Format format) {
         return newPowerRequest(urlForAggregatedGenerationPreType(areaName, productionType, resolutionCode, dateArg, date, format),"GET",null);
     }
     
-    public String getDayAheadTotalLoadForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
+    public JSONObject getDayAheadTotalLoadForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
         return newPowerRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, dateArg, date, format),"GET",null);
     }
     
-    public String getActualvsForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
+    public JSONObject getActualvsForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
         return newPowerRequest(urlForActualvsForecast(areaName, resolutionCode, dateArg, date, format),"GET",null);
     }
 

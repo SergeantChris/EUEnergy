@@ -180,6 +180,14 @@ public class DatabaseManager {
 	public FindIterable<Document> getQueryIterable(String coll, BasicDBObject dbo){		
 		return db.getCollection(coll).find(dbo);
 	}
+	
+	public long getCount(String coll){		
+		return db.getCollection(coll).countDocuments();
+	}
+	
+	public long getAllCount(){		
+		return Long.parseLong((db.runCommand(new Document("dbStats", 1)).get("objects").toString()));
+	}
 		
 	public AggregateIterable<Document> getGroupBySum(String coll, BasicDBObject dbo, BasicDBObject sort, String field, String sumfield) {
 		return db.getCollection(coll).aggregate(

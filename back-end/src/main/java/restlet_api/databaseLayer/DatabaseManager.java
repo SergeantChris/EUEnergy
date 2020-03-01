@@ -181,7 +181,7 @@ public class DatabaseManager {
 		return db.getCollection(coll).find(dbo);
 	}
 		
-	AggregateIterable<Document> getGroupBySum(String coll, BasicDBObject dbo, BasicDBObject sort, String field, String sumfield) {
+	public AggregateIterable<Document> getGroupBySum(String coll, BasicDBObject dbo, BasicDBObject sort, String field, String sumfield) {
 		return db.getCollection(coll).aggregate(
 					Arrays.asList(
 							Aggregates.match(dbo),
@@ -197,7 +197,7 @@ public class DatabaseManager {
 				); 
 	}
 	
-	AggregateIterable<Document> getGroupBySum(String coll, BasicDBObject dbo, BasicDBObject sort, String field, Document groupFields, String sumfield) {
+	public AggregateIterable<Document> getGroupBySum(String coll, BasicDBObject dbo, BasicDBObject sort, String field, Document groupFields, String sumfield) {
 		return db.getCollection(coll).aggregate(
 					Arrays.asList(
 							Aggregates.match(dbo),

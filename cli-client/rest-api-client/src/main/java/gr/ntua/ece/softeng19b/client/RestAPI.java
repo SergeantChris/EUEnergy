@@ -138,7 +138,7 @@ public class RestAPI {
     }
 //-----------------------------------------END URL-------------------------------------------------------
 //-----------------------------------------Request-------------------------------------------------------    
-    private String newGetRequestJson(String url) {
+    private String newPowerRequest(String url,String Method, Map<String, String> params) {
     	return "GET url:" + url;
     }
 
@@ -279,7 +279,7 @@ public class RestAPI {
     
 
     public String getActualTotalLoad(String areaName,String resolutionCode,String dateArg, String date, Format format) {
-        return newGetRequestJson(urlForActualDataLoad(areaName, resolutionCode, dateArg, date, format));
+        return newPowerRequest(urlForActualDataLoad(areaName, resolutionCode, dateArg, date, format),"GET", null);
     }
     
     public List<ATLRecordForSpecificDay> getActualTotalLoad(String areaName,
@@ -293,15 +293,15 @@ public class RestAPI {
     }
     
     public String getAggregatedGenerationPerType(String areaName, String productionType,String resolutionCode, String dateArg,String date, Format format) {
-        return newGetRequestJson(urlForAggregatedGenerationPreType(areaName, productionType, resolutionCode, dateArg, date, format));
+        return newPowerRequest(urlForAggregatedGenerationPreType(areaName, productionType, resolutionCode, dateArg, date, format),"GET",null);
     }
     
     public String getDayAheadTotalLoadForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
-        return newGetRequestJson(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, dateArg, date, format));
+        return newPowerRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, dateArg, date, format),"GET",null);
     }
     
     public String getActualvsForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
-        return newGetRequestJson(urlForActualvsForecast(areaName, resolutionCode, dateArg, date, format));
+        return newPowerRequest(urlForActualvsForecast(areaName, resolutionCode, dateArg, date, format),"GET",null);
     }
 
     

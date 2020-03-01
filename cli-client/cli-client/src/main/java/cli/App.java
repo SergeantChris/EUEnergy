@@ -24,16 +24,20 @@ import cli.ApiUtil;
     version = "energy_TEAM 1.0",
     subcommands = {
         HealthCheck.class,
+        Reset.class,
         ActualTotalLoad.class,
         AggregatedGenerationPerType.class,
         DayAheadTotalLoadForecast.class,
         ActualvsForecast.class,
-        Login.class
+        Login.class,
+        Logout.class
     }
 )
+
+
 public class App implements Callable<Integer> {
 
-    static final String BASE_URL = "https://localhost:8765/energy/api";
+    static final String BASE_URL = "http://localhost:8765/energy/api";
 
     public static void main(String[] args) throws IOException {
     	System.out.println("Starting Pico CLI");
@@ -41,17 +45,7 @@ public class App implements Callable<Integer> {
         commandLine.setCaseInsensitiveEnumValuesAllowed(true);
         commandLine.setStopAtUnmatched(true);
         
-        /*
-        int exitCode = commandLine.execute(args);
 
-        //If there's no sub-command, show the usage
-        if (commandLine.getParseResult().subcommand() == null) {
-            commandLine.usage(System.out);
-        }
-        //System.out.println(exitCode);
-
-        System.exit(exitCode);
-        */
         
         String command;
         Scanner in = new Scanner(System.in);

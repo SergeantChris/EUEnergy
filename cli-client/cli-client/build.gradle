@@ -11,6 +11,8 @@ repositories {
 }
 
 dependencies {
+	compile 'info.picocli:picocli:4.2.0'
+	//annotationProcessor 'info.picocli:picocli-codegen:4.2.0'
 	compile 'org.json:json:20171018'
     implementation project(':data-model'),
                    project(':rest-api-client'),
@@ -18,9 +20,11 @@ dependencies {
 }
 
 application {
-    applicationName = "energy_TEAM"
+    applicationName = "energy_TEAM_38"
     mainClassName = 'cli.App'
 }
+
+
 
 run {
 	standardInput = System.in

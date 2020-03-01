@@ -3,7 +3,7 @@ import { HashRouter as Router, Route, Redirect } from "react-router-dom";
 import './App.css';
 import Nav from './Nav';
 import Main from './Main';
-//import Footer from './Footer';
+import Footer from './Footer';
 import { Logout } from './Auth';
 import { UserProvider } from './UserContext';
 import Welcome from './components/Welcome'

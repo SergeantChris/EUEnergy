@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import  Dropdown  from './Dropdown';
+import  Dropdown, { DropArea, DropPType }  from './Dropdown';
 
 export default function FormDialog() {
 	const [open, setOpen] = React.useState(true);
@@ -19,22 +19,24 @@ export default function FormDialog() {
 		setOpen(false);
 	};
 	
-	const list = [{title:'a1'},{title:'a2'},{title:'a3'},{title:'a4'}]
 
 	return (
 		<React.Fragment>
 			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
-				Open form dialog
+				New Request
 			</Button>
 			<Dialog  open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
 				<DialogTitle id="form-dialog-title">Request Data</DialogTitle>
 				<DialogContent>
-					<Dropdown list = {list}/>
+					<Dropdown type = "Type" />
 				</DialogContent>
 				<DialogContent>
 					<DialogContentText>
-
+						<DropArea/>
 					</DialogContentText>
+				</DialogContent>
+				<DialogContent >					
+					<DropPType /> 
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose} color="primary">

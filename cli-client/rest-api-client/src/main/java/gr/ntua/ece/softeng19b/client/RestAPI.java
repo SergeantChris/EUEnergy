@@ -8,6 +8,18 @@ import gr.ntua.ece.softeng19b.data.model.User;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import org.json.JSONObject;
+import org.restlet.Client;
+import org.restlet.Request;
+import org.restlet.data.Header;
+import org.restlet.data.MediaType;
+import org.restlet.data.Protocol;
+import org.restlet.engine.header.HeaderConstants;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
+import org.restlet.util.Series;
+
 import java.io.*;
 import java.math.BigInteger;
 import java.net.URI;
@@ -139,7 +151,31 @@ public class RestAPI {
 //-----------------------------------------END URL-------------------------------------------------------
 //-----------------------------------------Request-------------------------------------------------------    
     private String newPowerRequest(String url,String Method, Map<String, String> params) {
-    	return "GET url:" + url;
+    	
+    	Client client = new Client(Protocol.HTTP);
+    	ClientResource cr = new ClientResource(url);
+    	Request req = cr.getRequest();
+    	//req.setMethod();
+    	Series<Header> headers = new Series<Header>(Header.class);
+    	req.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, headers);
+    	
+    	for(String key : params.keySet()) {
+    		String val = params.get(key);
+    		headers.add(key, val);
+    	}
+    	
+    	switch(Method) {
+    	case "GET": cr.get(MediaType.APPLICATION_JSON);
+    		break;
+    	case "POST": cr.post(MediaType.APPLICATION_JSON);
+    		break;
+    	case "PUT": cr.put(MediaType.APPLICATION_JSON);
+    		break;
+    	}
+    	
+    	Representation resp = cr.getResponseEntity();
+    	
+    	return "Answer:\n" + resp.toString() + '\n';
     }
 
     private HttpRequest newGetRequest(String url) {

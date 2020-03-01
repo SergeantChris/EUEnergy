@@ -13,12 +13,17 @@ repositories {
 dependencies {
 
     implementation project(':data-model')
-
+	compile "org.restlet.jee:org.restlet:2.4.2"
+  	compile "org.restlet.jee:org.restlet.ext.jackson:2.4.2"
+  	compile "org.restlet.jee:org.restlet.ext.jaxrs:2.4.2"
     implementation "com.google.code.gson:gson:2.8.2",
                    "org.codehaus.groovy:groovy-all:2.5.8"
 
     testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5',
-                       'com.github.tomakehurst:wiremock-jre8:2.25.1'
+    'com.github.tomakehurst:wiremock-jre8:2.25.1'
+}
+repositories {
+	maven { url "http://maven.restlet.org" }
 }
 
 test {

@@ -18,6 +18,7 @@ repositories {
 		maven {
 			url "https://maven.restlet.talend.com/"
 		}
+	mavenCentral()
 }
 
 dependencies {
@@ -39,6 +40,16 @@ dependencies {
 	
 	compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.9.8'
 	compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+	
+	testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.1')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.3.1')
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
 }
 
 mainClassName = 'restlet_api.PowerRestlet'

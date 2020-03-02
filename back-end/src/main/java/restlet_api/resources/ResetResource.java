@@ -1,5 +1,6 @@
 package restlet_api.resources;
 
+import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
 
 import com.mongodb.BasicDBObject;
@@ -9,7 +10,7 @@ import restlet_api.utilities.GeneralUtilities;
 
 public class ResetResource extends PowerResource{
 	@Post
-	public String getPost() {
+	public String getPost(Representation resp) {
 		String res = "";
 		String token = getRequest().getHeaders().getFirstValue("Token");
 		if(DatabaseManager.isAdmin(token)) {

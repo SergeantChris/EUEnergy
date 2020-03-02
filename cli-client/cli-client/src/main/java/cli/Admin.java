@@ -54,7 +54,7 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
         }
 	    else {
 	    	 try {
-		            new RestAPI().importFile(file.dataset,file.path);
+		            new RestAPI().importFile(file.dataset, new java.io.File(file.path).toPath());
 		            return 0;
 		        } catch (RuntimeException e) {
 		            cli.getOut().println(e.getMessage());

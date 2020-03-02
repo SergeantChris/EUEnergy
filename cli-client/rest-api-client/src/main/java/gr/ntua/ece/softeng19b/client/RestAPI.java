@@ -4,24 +4,45 @@ import gr.ntua.ece.softeng19b.data.model.ATLRecordForSpecificDay;
 import gr.ntua.ece.softeng19b.data.model.User;
 import gr.ntua.ece.softeng19b.client.*;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.restlet.Client;
+import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.data.Header;
 import org.restlet.data.MediaType;
+import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.engine.header.HeaderConstants;
+import org.restlet.engine.ssl.DefaultSslContextFactory;
+import org.restlet.engine.ssl.SslContextFactory;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.util.Series;
 
+
+import java.io.IOException;
+import org.restlet.Client;
+import org.restlet.data.ChallengeResponse;
+import org.restlet.data.ChallengeScheme;
+import org.restlet.data.Form;
+import org.restlet.data.Protocol;
+import org.restlet.data.Reference;
+//import org.restlet.data.Response;
+//import org.restlet.resource.Representation;
+
+
 import java.io.*;
 import java.math.BigInteger;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -29,20 +50,56 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+class TrustEveryOneManager implements X509TrustManager {
+    static final TrustEveryOneManager INSTANCE = new TrustEveryOneManager();
+
+    private final static X509Certificate[] noCerts = new X509Certificate[0];
+
+    @Override
+    public void checkClientTrusted(X509Certificate[] chain, String authType)
+            throws CertificateException {
+        // we trust it - return
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] chain, String authType)
+            throws CertificateException {
+        // we trust it - return
+    }
+
+    @Override
+    public X509Certificate[] getAcceptedIssuers() {
+        return noCerts;
+    }
+
+}
+
+class TrustingSslContextFactory extends DefaultSslContextFactory {
+    @Override
+    public SSLContext createSslContext() throws Exception {
+        final SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, new TrustManager[] { TrustEveryOneManager.INSTANCE }, null);
+        return createWrapper(sslContext);
+    }
+}
 
 public class RestAPI {
 
     private static final String CONTENT_TYPE_HEADER = "Content-Type";
     private static final String URL_ENCODED = "application/x-www-form-urlencoded";
     private static final String MULTIPART_FORM_DATA = "multipart/form-data";
-
+    
     public static final String BASE_URL = "/energy/api";
     public static final String CUSTOM_HEADER = "Token";
 
@@ -66,7 +123,7 @@ public class RestAPI {
         catch(NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e.getMessage());
         }
-        this.urlPrefix = "http://" + host + ":" + port + BASE_URL;
+        this.urlPrefix = "https://" + host + ":" + port + BASE_URL;
     }
 //----------------------------------URL-------------------------------------------------------
     String urlForActualDataLoad(String areaName, String resolutionCode, LocalDate date, Format format) {
@@ -147,23 +204,42 @@ public class RestAPI {
         return urlPrefix + "/Admin/" + URLEncoder.encode(dataSet, StandardCharsets.UTF_8);
     }
 //-----------------------------------------END URL-------------------------------------------------------
-//-----------------------------------------Request-------------------------------------------------------    
-    private String newPowerRequest(String url,String Method, Map<String, String> params) {
-    	String res = "";
-    	Client client = new Client(Protocol.HTTP);
-    	ClientResource cr = new ClientResource(url);
-    	//System.out.println("Url is: " + url + '\n');
-    	Request req = cr.getRequest();
+//-----------------------------------------Request-------------------------------------------------------
+    
+
+    
+    private JSONArray newPowerRequest(String url,String Method, Map<String, String> params) {    	
     	
+    	HostnameVerifier allHostsValid = new HostnameVerifier() {
+    	      public boolean verify(String hostname, SSLSession session) {
+    	        return true;
+    	      }
+    	    };
+    	HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+    	
+    	String res = "";
+    	Context clientContext = new Context();
+        Client client = new Client(clientContext, Protocol.HTTPS);
+        
+        ClientResource cr = new ClientResource(url);
+        cr.setNext(client);
+        
+        Series<Parameter> parameters = client.getContext().getParameters();
+        parameters.add("truststorePath", "./mykeystore.jks");
+        parameters.add("truststorePassword", "changeit");
+        parameters.add("trustPassword", "changeit");
+        parameters.add("truststoreType", "JKS");
+        
+        Request req = cr.getRequest();
+        
     	Series<Header> headers = new Series<Header>(Header.class);
     	req.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, headers);
-    	//headers.add("Token", "1234-1234-1234-1234");
-    	//System.out.println("Set the headers");
     	
     	if(params != null)
     	if(!params.isEmpty())
 	    	for(String key : params.keySet()) {
 	    		String val = params.get(key);
+	    		System.out.println("Added " + key + ": " + val);
 	    		headers.add(key, val);
 	    	}
     	
@@ -171,11 +247,12 @@ public class RestAPI {
     	switch(Method) {
     	case "GET": cr.get(MediaType.APPLICATION_JSON);
     		break;
-    	case "POST": cr.post(MediaType.APPLICATION_JSON);
+    	case "POST": cr.post(MediaType.TEXT_PLAIN);
     		break;
     	case "PUT": cr.put(MediaType.APPLICATION_JSON);
     		break;
     	}
+    	
     	
     	
     	Representation resp = cr.getResponseEntity();
@@ -185,8 +262,8 @@ public class RestAPI {
     	}catch(Exception e) {
     		e.printStackTrace();
     	}
-    	
-    	return new JSONObject(text);
+    	System.out.println(text);
+    	return new JSONArray();
     }
 
     private HttpRequest newGetRequest(String url) {
@@ -254,7 +331,7 @@ public class RestAPI {
         );
     }
     
-    public String myHealthCheck() {
+    public JSONArray myHealthCheck() {
         return newPowerRequest(urlForHealthCheck(),"GET",null);
     }
 
@@ -265,14 +342,17 @@ public class RestAPI {
         );
     }
     
-    public String myResetDatabase() {
+    public JSONArray myResetDatabase() {
         return newPowerRequest(urlForReset(),"POST",null);
     }
 
     public void login(String username, String password) {
         Map<String, String> formData = new LinkedHashMap<>();
-        formData.put("username", username);
-        formData.put("password", password);
+        formData.put("User", username);
+        formData.put("Pass", password);
+        
+        newPowerRequest("https://localhost:8765/energy/api/Test", "POST", formData);
+        
         token = sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newPostRequest(urlForLogin(), URL_ENCODED, ofUrlEncodedFormData(formData)),
             ClientHelper::parseJsonToken
@@ -302,7 +382,7 @@ public class RestAPI {
         );
     }
 
-    public JSONObject updateUser(String username,String password,String email,int quota) {
+    public JSONArray updateUser(String username,String password,String email,int quota) {
         //only email and/or quota can be updated
         Map<String, String> formData = new LinkedHashMap<>();
         formData.put("email", email);

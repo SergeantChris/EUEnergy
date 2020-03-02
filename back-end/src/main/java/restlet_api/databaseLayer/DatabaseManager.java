@@ -37,6 +37,11 @@ public class DatabaseManager {
 		})).start();
 	}
 	
+	public static void testInit() {
+		tokenUsers = new HashMap<String, String>();
+		userTokens = new HashMap<String, String>();
+	}
+	
 	private DatabaseManager() {
 		try{
 			//db at localhost:default port
@@ -151,7 +156,6 @@ public class DatabaseManager {
 		String user = tokenUsers.get(token);
 		tokenUsers.remove(token);
 		userTokens.remove(user);
-		System.out.println(token);
 	}
 	
 	public static void insertToken(String token, String username) {

@@ -208,7 +208,7 @@ public class RestAPI {
     
 
     
-    private JSONArray newPowerRequest(String url,String Method, Map<String, String> params) {    	
+    private String newPowerRequest(String url,String Method, Map<String, String> params) {    	
     	
     	HostnameVerifier allHostsValid = new HostnameVerifier() {
     	      public boolean verify(String hostname, SSLSession session) {
@@ -239,7 +239,7 @@ public class RestAPI {
     	if(!params.isEmpty())
 	    	for(String key : params.keySet()) {
 	    		String val = params.get(key);
-	    		System.out.println("Added " + key + ": " + val);
+	    		//System.out.println("Added " + key + ": " + val);
 	    		headers.add(key, val);
 	    	}
     	
@@ -263,7 +263,7 @@ public class RestAPI {
     		e.printStackTrace();
     	}
     	System.out.println(text);
-    	return new JSONArray();
+    	return text;
     }
 
     private HttpRequest newGetRequest(String url) {
@@ -331,7 +331,7 @@ public class RestAPI {
         );
     }
     
-    public JSONArray myHealthCheck() {
+    public String myHealthCheck() {
         return newPowerRequest(urlForHealthCheck(),"GET",null);
     }
 
@@ -342,7 +342,7 @@ public class RestAPI {
         );
     }
     
-    public JSONArray myResetDatabase() {
+    public String myResetDatabase() {
         return newPowerRequest(urlForReset(),"POST",null);
     }
 
@@ -350,21 +350,26 @@ public class RestAPI {
         Map<String, String> formData = new LinkedHashMap<>();
         formData.put("User", username);
         formData.put("Pass", password);
-        
-        newPowerRequest("https://localhost:8765/energy/api/Test", "POST", formData);
-        
-        token = sendRequestAndParseResponseBodyAsUTF8Text(
+        String res;
+        res = newPowerRequest("https://localhost:8765/energy/api/Login", "POST", formData);
+        JSONObject resp = new JSONObject(res); 
+        try {
+        	token = resp.getString("Token");
+        }catch(Exception e) {
+        	
+        }
+        System.out.println("Token now is :" + token);
+        /*token = sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newPostRequest(urlForLogin(), URL_ENCODED, ofUrlEncodedFormData(formData)),
             ClientHelper::parseJsonToken
-        );
-        System.out.println("successful login, token:" + token);
+        );*/
     }
 
     public void logout() {
-        sendRequestAndParseResponseBodyAsUTF8Text(
-            () -> newPostRequest(urlForLogout(), URL_ENCODED, HttpRequest.BodyPublishers.noBody()),
-            null
-        );
+    	Map<String, String> formData = new LinkedHashMap<>();
+    	if(token != null)
+    		formData.put("Token", token);
+    	newPowerRequest("https://localhost:8765/energy/api/Logout", "POST", formData);
         token = null;
     }
 //--------------------------------------END Functions----------------------------------------------------
@@ -382,7 +387,7 @@ public class RestAPI {
         );
     }
 
-    public JSONArray updateUser(String username,String password,String email,int quota) {
+    public String updateUser(String username,String password,String email,int quota) {
         //only email and/or quota can be updated
         Map<String, String> formData = new LinkedHashMap<>();
         formData.put("email", email);
@@ -409,7 +414,6 @@ public class RestAPI {
         );
     }
 //-------------------------------------End Admin Functions------------------------------------------------------- 
-    
     
     public String getActualTotalLoad(String areaName,String resolutionCode,String dateArg, String date, Format format) {
         return newPowerRequest(urlForActualDataLoad(areaName, resolutionCode, dateArg, date, format),"GET", null);

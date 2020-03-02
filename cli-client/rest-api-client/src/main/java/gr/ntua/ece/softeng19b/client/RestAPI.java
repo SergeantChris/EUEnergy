@@ -110,7 +110,7 @@ public class RestAPI {
     private final String urlPrefix;
     private final HttpClient client;
 
-    private String token = null; //user is not logged in
+    public static String token = null; //user is not logged in
 
     public RestAPI() throws RuntimeException {
         this("localhost", 8765);
@@ -140,7 +140,8 @@ public class RestAPI {
         String encDate     = URLEncoder.encode(date, StandardCharsets.UTF_8);
         
         
-        return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/" + encDateArg + "/" + encDate;
+        return urlPrefix + "/ActualTotalLoad/" + encAreaName + "/" + encResCode + "/" + encDateArg + "/" + encDate +
+                "?type=" + format.name().toLowerCase();
     }
 
     
@@ -153,7 +154,7 @@ public class RestAPI {
         
         
         return urlPrefix + "/AggregatedGenerationPerType/" + encAreaName  +"/" + encProdType + "/" + encResCode + "/" + encDateArg + "/" + encDate +
-                "?format=" + format.name().toLowerCase();
+                "?type=" + format.name().toLowerCase();
     }
     
     String urlForDayAheadTotalLoadForecast(String areaName, String resolutionCode, String dateArg, String date, Format format) {
@@ -164,7 +165,7 @@ public class RestAPI {
         
         
         return urlPrefix + "/DayAheadTotalLoadForecast/" + encAreaName + "/" + encResCode + "/" + encDateArg + "/" + encDate +
-                "?format=" + format.name().toLowerCase();
+                "?type=" + format.name().toLowerCase();
     }
     String urlForActualvsForecast(String areaName, String resolutionCode, String dateArg, String date, Format format) {
         String encAreaName = URLEncoder.encode(areaName, StandardCharsets.UTF_8);
@@ -174,7 +175,7 @@ public class RestAPI {
         
         
         return urlPrefix + "/ActualvsForecast/" + encAreaName + "/" + encResCode + "/" + encDateArg + "/" + encDate +
-                "?format=" + format.name().toLowerCase();
+                "?type=" + format.name().toLowerCase();
     }
     
     
@@ -235,13 +236,16 @@ public class RestAPI {
     	Series<Header> headers = new Series<Header>(Header.class);
     	req.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, headers);
     	
+    	System.out.println("URL: " + url);
     	if(params != null)
-    	if(!params.isEmpty())
+    	if(!params.isEmpty()) {
+    		System.out.println("Params: ");
 	    	for(String key : params.keySet()) {
 	    		String val = params.get(key);
-	    		//System.out.println("Added " + key + ": " + val);
+	    		System.out.println(key + ": " + val);
 	    		headers.add(key, val);
 	    	}
+    	}
     	
     	
     	switch(Method) {
@@ -343,7 +347,10 @@ public class RestAPI {
     }
     
     public String myResetDatabase() {
-        return newPowerRequest(urlForReset(),"POST",null);
+    	Map<String, String> formData = new LinkedHashMap<>();
+    	if(token != null)
+    		formData.put("Token", token);
+        return newPowerRequest(urlForReset(),"POST",formData);
     }
 
     public void login(String username, String password) {
@@ -369,6 +376,7 @@ public class RestAPI {
     	Map<String, String> formData = new LinkedHashMap<>();
     	if(token != null)
     		formData.put("Token", token);
+    		
     	newPowerRequest("https://localhost:8765/energy/api/Logout", "POST", formData);
         token = null;
     }
@@ -381,10 +389,13 @@ public class RestAPI {
         formData.put("email", email);
         formData.put("password", password);
         formData.put("requestsPerDayQuota", String.valueOf(quota));
-        return sendRequestAndParseResponseBodyAsUTF8Text(
+        newPowerRequest(urlForAddUser(), "POST", formData);
+        
+        return new User();
+        /*return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newPostRequest(urlForAddUser(), URL_ENCODED, ofUrlEncodedFormData(formData)),
             ClientHelper::parseJsonUser
-        );
+        );*/
     }
 
     public String updateUser(String username,String password,String email,int quota) {
@@ -397,10 +408,12 @@ public class RestAPI {
     }
 
     public User getUser(String username) {
-        return sendRequestAndParseResponseBodyAsUTF8Text(
+    	newPowerRequest(urlForGetUser(username), "GET", null);
+        /*return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newGetRequest(urlForGetUser(username)),
             ClientHelper::parseJsonUser
-        );
+        );*/
+    	return new User();
     }
 
     public ImportResult importFile(String dataSet, Path dataFilePath) throws IOException {
@@ -416,7 +429,10 @@ public class RestAPI {
 //-------------------------------------End Admin Functions------------------------------------------------------- 
     
     public String getActualTotalLoad(String areaName,String resolutionCode,String dateArg, String date, Format format) {
-        return newPowerRequest(urlForActualDataLoad(areaName, resolutionCode, dateArg, date, format),"GET", null);
+    	Map<String, String> formData = new LinkedHashMap<>();
+    	if(token != null)
+    		formData.put("Token", token);
+        return newPowerRequest(urlForActualDataLoad(areaName, resolutionCode, dateArg, date, format),"GET", formData);
     }
     
     public List<ATLRecordForSpecificDay> getActualTotalLoad(String areaName, String resolutionCode,LocalDate date,Format format) {
@@ -427,15 +443,24 @@ public class RestAPI {
     }
     
     public String getAggregatedGenerationPerType(String areaName, String productionType,String resolutionCode, String dateArg,String date, Format format) {
-        return newPowerRequest(urlForAggregatedGenerationPreType(areaName, productionType, resolutionCode, dateArg, date, format),"GET",null);
+    	Map<String, String> formData = new LinkedHashMap<>();
+    	if(token != null)
+    		formData.put("Token", token);
+    	return newPowerRequest(urlForAggregatedGenerationPreType(areaName, productionType, resolutionCode, dateArg, date, format),"GET",formData);
     }
     
     public String getDayAheadTotalLoadForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
-        return newPowerRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, dateArg, date, format),"GET",null);
+    	Map<String, String> formData = new LinkedHashMap<>();
+    	if(token != null)
+    		formData.put("Token", token);
+    	return newPowerRequest(urlForDayAheadTotalLoadForecast(areaName, resolutionCode, dateArg, date, format),"GET",formData);
     }
     
     public String getActualvsForecast(String areaName,String resolutionCode,String dateArg, String date, Format format) {
-        return newPowerRequest(urlForActualvsForecast(areaName, resolutionCode, dateArg, date, format),"GET",null);
+    	Map<String, String> formData = new LinkedHashMap<>();
+    	if(token != null)
+    		formData.put("Token", token);
+    	return newPowerRequest(urlForActualvsForecast(areaName, resolutionCode, dateArg, date, format),"GET",formData);
     }
 
     

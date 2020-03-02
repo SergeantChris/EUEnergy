@@ -190,6 +190,7 @@ public class AdminResource extends PowerResource{
 	            // Process only the uploaded item called "fileToUpload"
 	            // and return back
 	            boolean found = false;
+	            System.out.println("Finished setup, before reading loop");
 	            while (fileIterator.hasNext() && !found) {
 	                FileItemStream fi = fileIterator.next();
 	                if (fi.getFieldName().equals("fileToUpload")) {

@@ -19,16 +19,23 @@ import java.util.concurrent.Callable;
 public class Admin extends BasicCliArgs implements Callable<Integer> {
 	
 
+	@ArgGroup(exclusive = false, multiplicity = "0..1")
+	File file;
 
-	@Option(
-	        names = {"-f","--file"},
-	        required = false,
-	        description = "Write file path"
-	        )
-    String path;
+    static class File {
+    	@Option(
+    	        names = {"-f","--file"},
+    	        required = false,
+    	        description = "Write file path"
+    	        )
+    	 String path;
+
+    	@Parameters(arity="1", paramLabel = "DataSet", description = "Data set")
+    	String dataset;
+    }
 	
-	@Parameters(arity = "1", paramLabel = "DataSet", description = "Data set")
-	String dataset;
+   
+	
 	
 
     @Override
@@ -40,14 +47,21 @@ public class Admin extends BasicCliArgs implements Callable<Integer> {
             return 0;
         }
 
-        try {
-            new RestAPI().importFile(dataset,path);
+        if(file==null) {
+        	cli.usage(cli.getOut());
             return 0;
-        } catch (RuntimeException e) {
-            cli.getOut().println(e.getMessage());
-            e.printStackTrace(cli.getOut());
-            return -1;
+	       
         }
+	    else {
+	    	 try {
+		            new RestAPI().importFile(file.dataset,file.path);
+		            return 0;
+		        } catch (RuntimeException e) {
+		            cli.getOut().println(e.getMessage());
+		            e.printStackTrace(cli.getOut());
+		            return -1;
+		        }
+	    }
     
     }
 

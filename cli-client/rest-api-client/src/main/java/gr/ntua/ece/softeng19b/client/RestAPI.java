@@ -211,82 +211,30 @@ public class RestAPI {
 //-----------------------------------------END URL-------------------------------------------------------
 //-----------------------------------------Request-------------------------------------------------------
     
+    public ImportResult importFile(String dataSet, Path dataFilePath) throws IOException {
+        String boundary = new BigInteger(256, new Random()).toString();
+        Map<String, Object> formData = Map.of("file", dataFilePath);
+        HttpRequest.BodyPublisher bodyPublisher = ofMultipartFormData(formData, boundary);
+        String contentType = MULTIPART_FORM_DATA + ";boundary=" + boundary;
+        
+        
+        return sendRequestAndParseResponseBodyAsUTF8Text(
+            () -> newPostRequest(urlForImport(dataSet), contentType, bodyPublisher),
+            ClientHelper::parseJsonImportResult
+        );
+    }
+    
+    
+    
     private String newFileUploadRequest(String dataset, String filepath, String token) throws IOException {
     	HostnameVerifier allHostsValid = new HostnameVerifier() {
   	      public boolean verify(String hostname, SSLSession session) {
   	        return true;
   	      }
   	    };
-  	    //////////////
-  	    File leCsv = new File(filepath);
+  	    ImportResult importResult = new RestAPI().importFile("fileToUpload", new File("./theCSV.csv").toPath());
   	    
-		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-		String url = "https://localhost:8765/energy/api/Admin/" + dataset;
-		String res = "";
-		Context clientContext = new Context();
-		  Client client = new Client(clientContext, Protocol.HTTPS);
-		  
-		  ClientResource cr = new ClientResource(url);
-		  cr.setNext(client);
-		  
-		  Series<Parameter> parameters = client.getContext().getParameters();
-		  parameters.add("truststorePath", "./mykeystore.jks");
-		  parameters.add("truststorePassword", "changeit");
-		  parameters.add("trustPassword", "changeit");
-		  parameters.add("truststoreType", "JKS");
-		  
-		  Request req = cr.getRequest();
-		  
-		Series<Header> headers = new Series<Header>(Header.class);
-		req.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, headers);
-		headers.add("Token", token);
-		
-		System.out.println("URL: " + url);
-		/////////////////////////////////////////////
-		
-		/*BufferedReader reader = new BufferedReader(new FileReader("theCSV.csv"));
-		String sb = "";
-		String line = "";
-		while((line=reader.readLine())!=null) {
-			sb += (line);
-			sb += ('\n');
-		}
-		int boundary = sb.length() + 1;
-		reader.close();
-		*/
-		//headers.add("Content-type", "boundary=" + boundary);
-		Form fileForm = new Form(); 
-	    fileForm.add(Disposition.NAME_FILENAME, "theCSV.csv");
-	    fileForm.add("name", "fileToUpload");
-
-	    Disposition disposition = new Disposition(Disposition.TYPE_INLINE, fileForm); 
-
-	    FileRepresentation entity = new FileRepresentation(new File("theCSV.csv"), MediaType.MULTIPART_FORM_DATA);  
-	    entity.setDisposition(disposition);
-/*
-	    FormData fd = new FormData("blob_name2", entity);        
-	    FormDataSet fds = new FormDataSet();
-	    fds.setMultipart(true);
-	    String boundary = "myweiredboundaryasdfasdfasdf";
-	    fds.setMediaType(MediaType.MULTIPART_FORM_DATA);
-	    fds.setMultipartBoundary(boundary);
-	    fds.getEntries().add(fd);
-
-	    clientResource.setRequestEntityBuffering(true);
-	    clientResource.post(fds);
-		*/
-		cr.post(entity);
-		
-		Representation resp = cr.getResponseEntity();
-		String text = "";
-		try {
-			text = resp.getText();
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println(text);
-		
-			return "";
+  	    return "";
     }
     
     private String newPowerRequest(String url,String Method, Map<String, String> params) {    	
@@ -364,6 +312,12 @@ public class RestAPI {
 
     private HttpRequest newRequest(String method, String url, String contentType, HttpRequest.BodyPublisher bodyPublisher) {
         HttpRequest.Builder builder = HttpRequest.newBuilder();
+        HostnameVerifier allHostsValid = new HostnameVerifier() {
+  	      public boolean verify(String hostname, SSLSession session) {
+  	        return true;
+  	      }
+  	    };
+  	    HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
         if (token != null) {
             builder.header(CUSTOM_HEADER, token);
         }
@@ -499,11 +453,8 @@ public class RestAPI {
     	return new User();
     }
 
-    public ImportResult importFile(String dataSet, String dataFilePath) throws IOException {
-        newFileUploadRequest(dataSet, dataFilePath, token);
-        return new ImportResult(1, 1, 1);
-    }
-//-------------------------------------End Admin Functions------------------------------------------------------- 
+    
+//-------------------------------------End Admin Functions-------------------------------------------------------     
     
     public String getActualTotalLoad(String areaName,String resolutionCode,String dateArg, String date, Format format) {
     	Map<String, String> formData = new LinkedHashMap<>();
@@ -576,7 +527,7 @@ public class RestAPI {
                 String mimeType = Files.probeContentType(path);
                 byteArrays.add(("\"" + entry.getKey() + "\"; filename=\"" + path.getFileName()
                         + "\"\r\nContent-Type: " + mimeType + "\r\n\r\n").getBytes(StandardCharsets.UTF_8));
-                byteArrays.add(Base64.getMimeEncoder().encode(Files.readAllBytes(path)));
+                //byteArrays.add(Base64.getMimeEncoder().encode(Files.readAllBytes(path)));
                 byteArrays.add("\r\n".getBytes(StandardCharsets.UTF_8));
             } else {
                 byteArrays.add(("\"" + entry.getKey() + "\"\r\n\r\n" + entry.getValue() + "\r\n")

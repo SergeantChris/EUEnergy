@@ -23,6 +23,7 @@ import org.restlet.data.Protocol;
 import org.restlet.engine.header.HeaderConstants;
 import org.restlet.engine.ssl.DefaultSslContextFactory;
 import org.restlet.engine.ssl.SslContextFactory;
+import org.restlet.representation.FileRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import org.restlet.Client;
 import org.restlet.data.ChallengeResponse;
 import org.restlet.data.ChallengeScheme;
+import org.restlet.data.Disposition;
 import org.restlet.data.Form;
 import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
@@ -215,7 +217,7 @@ public class RestAPI {
   	        return true;
   	      }
   	    };
-  	    
+  	    //////////////
   	    File leCsv = new File(filepath);
   	    
 		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
@@ -237,14 +239,43 @@ public class RestAPI {
 		  
 		Series<Header> headers = new Series<Header>(Header.class);
 		req.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, headers);
+		headers.add("Token", token);
 		
 		System.out.println("URL: " + url);
+		/////////////////////////////////////////////
 		
-		//cr.post(leCsv,MediaType.MULTIPART_FORM_DATA);
-		Representation resp = 
-		cr.post(leCsv, MediaType.MULTIPART_ALL);
-		
-		
+		/*BufferedReader reader = new BufferedReader(new FileReader("theCSV.csv"));
+		String sb = "";
+		String line = "";
+		while((line=reader.readLine())!=null) {
+			sb += (line);
+			sb += ('\n');
+		}
+		int boundary = sb.length() + 1;
+		reader.close();
+		*/
+		//headers.add("Content-type", "boundary=" + boundary);
+		Form fileForm = new Form(); 
+	    fileForm.add(Disposition.NAME_FILENAME, "theCSV.csv");
+	    fileForm.add("name", "fileToUpload");
+
+	    Disposition disposition = new Disposition(Disposition.TYPE_INLINE, fileForm); 
+
+	    FileRepresentation entity = new FileRepresentation(new File("theCSV.csv"), MediaType.MULTIPART_FORM_DATA);  
+	    entity.setDisposition(disposition);
+/*
+	    FormData fd = new FormData("blob_name2", entity);        
+	    FormDataSet fds = new FormDataSet();
+	    fds.setMultipart(true);
+	    String boundary = "myweiredboundaryasdfasdfasdf";
+	    fds.setMediaType(MediaType.MULTIPART_FORM_DATA);
+	    fds.setMultipartBoundary(boundary);
+	    fds.getEntries().add(fd);
+
+	    clientResource.setRequestEntityBuffering(true);
+	    clientResource.post(fds);
+		*/
+		cr.post(entity);
 		
 		Representation resp = cr.getResponseEntity();
 		String text = "";

@@ -1,6 +1,7 @@
 package restlet_api.resources;
 
 import org.json.JSONObject;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
 import com.mongodb.BasicDBObject;
 
@@ -9,9 +10,10 @@ import restlet_api.utilities.GeneralUtilities;
 
 public class LoginResource extends PowerResource{
 	@Post
-	public String getPost() {
+	public String getPost(Representation repr) {
 		String username = getRequest().getHeaders().getFirstValue("User");
 		String pass = getRequest().getHeaders().getFirstValue("Pass");
+		
 		int hashpass = pass.hashCode();
 		
 		String res = "";

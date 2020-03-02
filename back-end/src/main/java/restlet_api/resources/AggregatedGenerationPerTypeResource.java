@@ -55,6 +55,7 @@ public class AggregatedGenerationPerTypeResource extends PowerResource{
 		else
 			res = GeneralUtilities.STATUS_NOT_AUTHORIZED;
 
+		if((res!=GeneralUtilities.STATUS_NOT_AUTHORIZED)&&(res!=GeneralUtilities.STATUS_OUT_OF_QUOTA))
 		if(type.equals("csv")) {
 			res = GeneralUtilities.csvFromJson(jarr);
 		}else {

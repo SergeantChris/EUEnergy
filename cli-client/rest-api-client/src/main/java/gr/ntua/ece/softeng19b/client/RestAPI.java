@@ -408,7 +408,10 @@ public class RestAPI {
     }
 
     public User getUser(String username) {
-    	newPowerRequest(urlForGetUser(username), "GET", null);
+    	Map<String, String> formData = new LinkedHashMap<>();
+    	if(token != null)
+    		formData.put("Token", token);
+    	newPowerRequest(urlForGetUser(username), "GET", formData);
         /*return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newGetRequest(urlForGetUser(username)),
             ClientHelper::parseJsonUser

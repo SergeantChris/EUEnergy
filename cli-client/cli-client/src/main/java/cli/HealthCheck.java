@@ -5,6 +5,8 @@ import picocli.CommandLine;
 
 import java.util.concurrent.Callable;
 
+import org.json.JSONArray;
+
 import static picocli.CommandLine.Command;
 
 @Command(
@@ -23,7 +25,7 @@ public class HealthCheck extends BasicCliArgs implements Callable<Integer> {
         }
 
         try {
-            String res = new RestAPI().myHealthCheck();
+        	JSONArray res = new RestAPI().myHealthCheck();
             System.out.println(res);
             return 0;
         } catch (RuntimeException e) {

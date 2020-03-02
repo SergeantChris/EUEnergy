@@ -2,6 +2,8 @@ package cli;
 
 import java.util.concurrent.Callable;
 
+import org.json.JSONArray;
+
 import gr.ntua.ece.softeng19b.client.RestAPI;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -23,21 +25,21 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
 
 	        try {
 	            if (dateArgs.date != null ) {
-	                String records = new RestAPI().getDayAheadTotalLoadForecast(areaName, timeres.name(), "date", dateArgs.date, format);
+	            	JSONArray records = new RestAPI().getDayAheadTotalLoadForecast(areaName, timeres.name(), "date", dateArgs.date, format);
 	                // Do something with the records :)
 	                System.out.println(records);
 	                return 0;
 	            }
 	            else if(dateArgs.month != null){
-	            	String records = new RestAPI().getDayAheadTotalLoadForecast(areaName, timeres.name(),"month",dateArgs.month , format);
+	            	JSONArray records = new RestAPI().getDayAheadTotalLoadForecast(areaName, timeres.name(),"month",dateArgs.month , format);
 	                // Do something with the records :)
-	                System.out.println("Fetched " + records + " records");
+	                System.out.println("Fetched " + records );
 	                return 0;
 	            }
 	            else if(dateArgs.year != null){
-	            	String records = new RestAPI().getDayAheadTotalLoadForecast(areaName, timeres.name(), "year",dateArgs.year, format);
+	            	JSONArray records = new RestAPI().getDayAheadTotalLoadForecast(areaName, timeres.name(), "year",dateArgs.year, format);
 	                // Do something with the records :)
-	                System.out.println("Fetched " + records + " records");
+	                System.out.println("Fetched " + records );
 	                return 0;
 	            }
 	            else {

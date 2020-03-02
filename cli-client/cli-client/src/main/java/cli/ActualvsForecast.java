@@ -5,6 +5,8 @@ import picocli.CommandLine;
 
 import java.util.concurrent.Callable;
 
+import org.json.JSONArray;
+
 import static picocli.CommandLine.Command;
 
 @Command(
@@ -24,21 +26,21 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
 
         try {
             if (dateArgs.date != null ) {
-                String records = new RestAPI().getActualvsForecast(areaName, timeres.name(), "date", dateArgs.date, format);
+            	JSONArray records = new RestAPI().getActualvsForecast(areaName, timeres.name(), "date", dateArgs.date, format);
                 // Do something with the records :)
-                System.out.println("Fetched " + records + " records");
+                System.out.println("Fetched " + records );
                 return 0;
             }
             else if(dateArgs.month != null){
-            	String records = new RestAPI().getActualvsForecast(areaName, timeres.name(),"month",dateArgs.month , format);
+            	JSONArray records = new RestAPI().getActualvsForecast(areaName, timeres.name(),"month",dateArgs.month , format);
                 // Do something with the records :)
-                System.out.println("Fetched " + records + " records");
+                System.out.println("Fetched " + records );
                 return 0;
             }
             else if(dateArgs.year != null){
-            	String records = new RestAPI().getActualvsForecast(areaName, timeres.name(), "year",dateArgs.year, format);
+            	JSONArray records = new RestAPI().getActualvsForecast(areaName, timeres.name(), "year",dateArgs.year, format);
                 // Do something with the records :)
-                System.out.println("Fetched " + records + " records");
+                System.out.println("Fetched " + records );
                 return 0;
             }
             else {

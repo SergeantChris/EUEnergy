@@ -5,7 +5,7 @@ import './index.css';
 import 'bootstrap';
 import App from './App';
 
-localStorage.clear();
+//localStorage.clear();
 
 const userData = {
     token: localStorage.getItem('token'),

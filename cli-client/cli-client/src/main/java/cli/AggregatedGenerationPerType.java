@@ -34,19 +34,19 @@ public class AggregatedGenerationPerType extends EnergyCliArgs implements Callab
             if (dateArgs.date != null ) {
             	String records = new RestAPI().getAggregatedGenerationPerType(areaName, productionType, timeres.name(), "date", dateArgs.date, format);
                 // Do something with the records :)
-                System.out.println("Fetched " + records );
+                //System.out.println("Fetched " + records );
                 return 0;
             }
             else if(dateArgs.month != null){
             	String records = new RestAPI().getAggregatedGenerationPerType(areaName, productionType,timeres.name(),  "month",dateArgs.month , format);
                 // Do something with the records :)
-                System.out.println("Fetched " + records );
+                //System.out.println("Fetched " + records );
                 return 0;
             }
             else if(dateArgs.year != null){
             	String records = new RestAPI().getAggregatedGenerationPerType(areaName, productionType, timeres.name(), "year",dateArgs.year, format);
                 // Do something with the records :)
-                System.out.println("Fetched " + records );
+                //System.out.println("Fetched " + records );
                 return 0;
             }
             else {

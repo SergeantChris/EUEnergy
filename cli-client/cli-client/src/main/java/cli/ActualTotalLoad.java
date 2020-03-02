@@ -29,19 +29,19 @@ public class ActualTotalLoad extends EnergyCliArgs implements Callable<Integer> 
             if (dateArgs.date != null ) {
                 String records = new RestAPI().getActualTotalLoad(areaName, timeres.name(), "date", dateArgs.date, format);
                 // Do something with the records :)
-                System.out.println("Fetched \n" + records);
+                //System.out.println("Fetched \n" + records);
                 return 0;
             }
             else if(dateArgs.month != null){
             	String records = new RestAPI().getActualTotalLoad(areaName, timeres.name(),"month",dateArgs.month , format);
                 // Do something with the records :)
-                System.out.println("Fetched \n" + records);
+                //System.out.println("Fetched \n" + records);
                 return 0;
             }
             else if(dateArgs.year != null){
             	String records = new RestAPI().getActualTotalLoad(areaName, timeres.name(), "year",dateArgs.year, format);
                 // Do something with the records :)
-                System.out.println("Fetched \n" + records);
+                //System.out.println("Fetched \n" + records);
                 return 0;
             }
             else {

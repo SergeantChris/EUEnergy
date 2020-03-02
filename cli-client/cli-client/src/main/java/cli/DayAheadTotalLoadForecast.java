@@ -27,23 +27,23 @@ public class DayAheadTotalLoadForecast extends EnergyCliArgs implements Callable
 	            if (dateArgs.date != null ) {
 	            	String records = new RestAPI().getDayAheadTotalLoadForecast(areaName, timeres.name(), "date", dateArgs.date, format);
 	                // Do something with the records :)
-	                System.out.println(records);
+	                //System.out.println(records);
 	                return 0;
 	            }
 	            else if(dateArgs.month != null){
 	            	String records = new RestAPI().getDayAheadTotalLoadForecast(areaName, timeres.name(),"month",dateArgs.month , format);
 	                // Do something with the records :)
-	                System.out.println("Fetched " + records );
+	                //System.out.println("Fetched " + records );
 	                return 0;
 	            }
 	            else if(dateArgs.year != null){
 	            	String records = new RestAPI().getDayAheadTotalLoadForecast(areaName, timeres.name(), "year",dateArgs.year, format);
 	                // Do something with the records :)
-	                System.out.println("Fetched " + records );
+	                //System.out.println("Fetched " + records );
 	                return 0;
 	            }
 	            else {
-	            	System.out.println("");
+	            	//System.out.println("");
 	            	cli.usage(cli.getOut());
 	                return 0;
 	            }

@@ -5,6 +5,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine;
 import picocli.CommandLine.*;
 import gr.ntua.ece.softeng19b.client.RestAPI;
+import gr.ntua.ece.softeng19b.data.model.User;
 
 
 @Command(name="UserStatus")
@@ -30,7 +31,7 @@ public class UserStatus extends BasicCliArgs implements Callable<Integer>{
         }
 		
 		try {
-			new RestAPI().getUser(username);
+			User u = new RestAPI().getUser(username);
 			return 0;
 			
 		}catch (RuntimeException e) {

@@ -416,7 +416,7 @@ public class RestAPI {
     	return new User();
     }
 
-    public ImportResult importFile(String dataSet, Path dataFilePath) throws IOException {
+    public ImportResult importFile(String dataSet, String dataFilePath) throws IOException {
         String boundary = new BigInteger(256, new Random()).toString();
         Map<String, Object> formData = Map.of("file", dataFilePath);
         HttpRequest.BodyPublisher bodyPublisher = ofMultipartFormData(formData, boundary);

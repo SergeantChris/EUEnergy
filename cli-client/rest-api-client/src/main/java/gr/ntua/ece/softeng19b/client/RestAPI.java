@@ -24,6 +24,7 @@ import org.restlet.engine.header.HeaderConstants;
 import org.restlet.engine.ssl.DefaultSslContextFactory;
 import org.restlet.engine.ssl.SslContextFactory;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.util.Series;
 
@@ -43,6 +44,7 @@ import java.io.*;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -198,7 +200,7 @@ public class RestAPI {
     }
 
     String urlForGetUser(String username) {
-        return urlForUpdateUser(username);
+        return "https://localhost:8765/energy/api/Admin/" + username;
     }
 
     String urlForImport(String dataSet) {
@@ -207,7 +209,54 @@ public class RestAPI {
 //-----------------------------------------END URL-------------------------------------------------------
 //-----------------------------------------Request-------------------------------------------------------
     
-
+    private String newFileUploadRequest(String dataset, String filepath, String token) throws IOException {
+    	HostnameVerifier allHostsValid = new HostnameVerifier() {
+  	      public boolean verify(String hostname, SSLSession session) {
+  	        return true;
+  	      }
+  	    };
+  	    
+  	    File leCsv = new File(filepath);
+  	    
+		HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+		String url = "https://localhost:8765/energy/api/Admin/" + dataset;
+		String res = "";
+		Context clientContext = new Context();
+		  Client client = new Client(clientContext, Protocol.HTTPS);
+		  
+		  ClientResource cr = new ClientResource(url);
+		  cr.setNext(client);
+		  
+		  Series<Parameter> parameters = client.getContext().getParameters();
+		  parameters.add("truststorePath", "./mykeystore.jks");
+		  parameters.add("truststorePassword", "changeit");
+		  parameters.add("trustPassword", "changeit");
+		  parameters.add("truststoreType", "JKS");
+		  
+		  Request req = cr.getRequest();
+		  
+		Series<Header> headers = new Series<Header>(Header.class);
+		req.getAttributes().put(HeaderConstants.ATTRIBUTE_HEADERS, headers);
+		
+		System.out.println("URL: " + url);
+		
+		//cr.post(leCsv,MediaType.MULTIPART_FORM_DATA);
+		Representation resp = 
+		cr.post(leCsv, MediaType.MULTIPART_ALL);
+		
+		
+		
+		Representation resp = cr.getResponseEntity();
+		String text = "";
+		try {
+			text = resp.getText();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(text);
+		
+			return "";
+    }
     
     private String newPowerRequest(String url,String Method, Map<String, String> params) {    	
     	
@@ -420,14 +469,8 @@ public class RestAPI {
     }
 
     public ImportResult importFile(String dataSet, String dataFilePath) throws IOException {
-        String boundary = new BigInteger(256, new Random()).toString();
-        Map<String, Object> formData = Map.of("file", dataFilePath);
-        HttpRequest.BodyPublisher bodyPublisher = ofMultipartFormData(formData, boundary);
-        String contentType = MULTIPART_FORM_DATA + ";boundary=" + boundary;
-        return sendRequestAndParseResponseBodyAsUTF8Text(
-            () -> newPostRequest(urlForImport(dataSet), contentType, bodyPublisher),
-            ClientHelper::parseJsonImportResult
-        );
+        newFileUploadRequest(dataSet, dataFilePath, token);
+        return new ImportResult(1, 1, 1);
     }
 //-------------------------------------End Admin Functions------------------------------------------------------- 
     

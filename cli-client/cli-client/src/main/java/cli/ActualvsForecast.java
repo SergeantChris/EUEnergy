@@ -26,19 +26,19 @@ public class ActualvsForecast extends EnergyCliArgs implements Callable<Integer>
 
         try {
             if (dateArgs.date != null ) {
-            	JSONArray records = new RestAPI().getActualvsForecast(areaName, timeres.name(), "date", dateArgs.date, format);
+            	String records = new RestAPI().getActualvsForecast(areaName, timeres.name(), "date", dateArgs.date, format);
                 // Do something with the records :)
                 System.out.println("Fetched " + records );
                 return 0;
             }
             else if(dateArgs.month != null){
-            	JSONArray records = new RestAPI().getActualvsForecast(areaName, timeres.name(),"month",dateArgs.month , format);
+            	String records = new RestAPI().getActualvsForecast(areaName, timeres.name(),"month",dateArgs.month , format);
                 // Do something with the records :)
                 System.out.println("Fetched " + records );
                 return 0;
             }
             else if(dateArgs.year != null){
-            	JSONArray records = new RestAPI().getActualvsForecast(areaName, timeres.name(), "year",dateArgs.year, format);
+            	String records = new RestAPI().getActualvsForecast(areaName, timeres.name(), "year",dateArgs.year, format);
                 // Do something with the records :)
                 System.out.println("Fetched " + records );
                 return 0;

@@ -25,7 +25,7 @@ public class HealthCheck extends BasicCliArgs implements Callable<Integer> {
         }
 
         try {
-        	JSONArray res = new RestAPI().myHealthCheck();
+        	String res = new RestAPI().myHealthCheck();
             System.out.println(res);
             return 0;
         } catch (RuntimeException e) {

@@ -21,6 +21,9 @@ dependencies {
     implementation project(':data-model'),
                    project(':rest-api-client'),
                    'info.picocli:picocli:4.1.4'
+    compile 'org.mongodb:mongodb-driver-sync:3.12.0'
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.3.1')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.3.1')
 }
 
 application {
@@ -28,7 +31,12 @@ application {
     mainClassName = 'cli.App'
 }
 
-
+test {
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
+}
 
 run {
 	standardInput = System.in

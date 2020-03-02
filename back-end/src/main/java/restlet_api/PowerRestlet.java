@@ -1,7 +1,10 @@
 package restlet_api;
 
+import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.HashSet;
+
+import javax.net.ssl.SSLContext;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,6 +16,7 @@ import org.restlet.data.Method;
 import org.restlet.data.Protocol;
 import org.restlet.data.Parameter;
 import org.restlet.engine.application.CorsFilter;
+import org.restlet.engine.ssl.SslContextFactory;
 import org.restlet.routing.Router;
 import org.restlet.util.Series;
 
@@ -41,16 +45,16 @@ public class PowerRestlet extends Application{
 	public static void runServer(int port) throws Exception {
 		// Create a component.
 		Component component = new Component();
-		Server server = component.getServers().add(Protocol.HTTP, port);
-		//Series<Parameter> parameters = server.getContext().getParameters();
-		/*
+		Server server = component.getServers().add(Protocol.HTTPS ,port);
+		
+		Series<Parameter> parameters = server.getContext().getParameters();
 		parameters.add("sslContextFactory",
-				"org.restlet.engine.ssl.DefaultSslContextFactory");
-		parameters.add("keyStorePath", "./serverX.jks");
-		parameters.add("keyStorePassword", "123456");
-		parameters.add("keyPassword", "123456");
+				"restlet_api.PowerSSL");
+		parameters.add("keyStorePath", "./keystore.jks");
+		parameters.add("keyStorePassword", "changeit");
+		parameters.add("keyPassword", "changeit");
 		parameters.add("keyStoreType", "JKS");
-		*/
+		
 		//server.getContext().getParameters().add("maxTotalConnections", "50");
 		
 		

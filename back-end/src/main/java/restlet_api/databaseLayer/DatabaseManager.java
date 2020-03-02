@@ -113,12 +113,12 @@ public class DatabaseManager {
 		try {
 			while(true) {
 				TimeUnit.MINUTES.sleep(1);
-				new DatabaseManager().updMany(
+				getManager().updMany(
 						"Users", 
 						new BasicDBObject().append("User", new BasicDBObject().append("$ne", "admin")), 
 						new BasicDBObject().append("Quotas", 10)
 						);
-				new DatabaseManager().updItem(
+				getManager().updItem(
 						"Users", 
 						new BasicDBObject().append("User", new BasicDBObject().append("$eq", "admin")), 
 						new BasicDBObject().append("Quotas", 50)
@@ -138,14 +138,14 @@ public class DatabaseManager {
 	
 	public static int getQuota(String username) {
 		BasicDBObject dbo = new BasicDBObject().append("User", username);
-		BasicDBObject retObj = new DatabaseManager().getItem("Users", dbo);
+		BasicDBObject retObj = getManager().getItem("Users", dbo);
 		return Integer.parseInt(retObj.get("Quotas").toString());
 	}
 	
 	public static void updateQuota(String username, Integer quota) {
 		BasicDBObject dbo = new BasicDBObject().append("User", username);
 		BasicDBObject replObj = new BasicDBObject().append("Quotas", quota-1);
-		new DatabaseManager().updItem("Users", dbo, replObj);
+		getManager().updItem("Users", dbo, replObj);
 	}
 	
 	public static boolean isActiveToken(String token) {

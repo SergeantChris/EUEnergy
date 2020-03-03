@@ -198,7 +198,7 @@ public class RestAPI {
     String urlForAddUser() { return urlPrefix + "/Admin/users"; }
 
     String urlForUpdateUser(String username) {
-        return urlPrefix + "/Admin/users/" + URLEncoder.encode(username, StandardCharsets.UTF_8);
+        return urlPrefix + "/Admin/" + URLEncoder.encode(username, StandardCharsets.UTF_8);
     }
 
     String urlForGetUser(String username) {
@@ -232,7 +232,7 @@ public class RestAPI {
   	        return true;
   	      }
   	    };
-  	    ImportResult importResult = new RestAPI().importFile("fileToUpload", new File("theCSV.csv").toPath());
+  	    ImportResult importResult = new RestAPI().importFile("fileToUpload", new File(filepath).toPath());
   	    
   	    return "";
     }
@@ -338,12 +338,14 @@ public class RestAPI {
             int statusCode = response.statusCode();
             if (statusCode == 200) {
                 try {
+                	/*
                     if (bodyProcessor != null) {
                         return bodyProcessor.apply(new InputStreamReader(response.body(), StandardCharsets.UTF_8));
                     }
                     else {
                         return null;
                     }
+                    */return null;
                 }
                 catch(Exception e) {
                     throw new ResponseProcessingException(e.getMessage(), e);
@@ -417,14 +419,16 @@ public class RestAPI {
 //--------------------------------------END Functions----------------------------------------------------
 //--------------------------------------Admin Functions--------------------------------------------------
     
-    public User addUser(String username, String email, String password, int quota) {
+    public User addUser(String username, String password, String email, int quota) {
         Map<String, String> formData = new LinkedHashMap<>();
-        formData.put("username", username);
-        formData.put("email", email);
-        formData.put("password", password);
-        formData.put("requestsPerDayQuota", String.valueOf(quota));
+        formData.put("User", username);
+        formData.put("Email", email);
+        formData.put("Pass", password);
+        formData.put("Quotas", String.valueOf(quota));
+        if(token != null)
+    		formData.put("Token", token);
         newPowerRequest(urlForAddUser(), "POST", formData);
-        
+    	
         return new User();
         /*return sendRequestAndParseResponseBodyAsUTF8Text(
             () -> newPostRequest(urlForAddUser(), URL_ENCODED, ofUrlEncodedFormData(formData)),
@@ -435,9 +439,11 @@ public class RestAPI {
     public String updateUser(String username,String password,String email,int quota) {
         //only email and/or quota can be updated
         Map<String, String> formData = new LinkedHashMap<>();
-        formData.put("email", email);
+        formData.put("Email", email);
         formData.put("Pass", password);
         formData.put("Quotas", String.valueOf(quota));
+        if(token != null)
+    		formData.put("Token", token);
         return newPowerRequest(urlForUpdateUser(username),"PUT",formData);
     }
 

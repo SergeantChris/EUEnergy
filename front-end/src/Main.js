@@ -6,6 +6,8 @@ import {Table} from 'react-bootstrap'
 import MyButton from './components/MyButton';
 import ReactDOM from 'react-dom';
 import SimpleGraph from './components/SimpleGraph';
+import SimplePieChart from './components/SimplePieChart';
+
 //import DatePicker from 'react-datepicker'
 //import Container from 'react-bootstrap/Container'
 
@@ -141,6 +143,7 @@ class Main extends Component {
     };
 
     checkValidation(){
+        
         let area = this.state.area
         let type = this.state.type
         let productionType = this.state.productionType     
@@ -167,6 +170,7 @@ class Main extends Component {
         return true
     }
     handleSubmit() {
+        let dateArg = ""
         console.log('Hopfully submiting ', this.state);
 
         if(!this.checkValidation()){
@@ -180,12 +184,15 @@ class Main extends Component {
             }
             url += this.state.resolution +"/" 
             if(this.state.YearSelect){
+                dateArg="year"
                 url +=  "year/"+this.state.year
             }
             if(this.state.MonthSelect){
+                dateArg="month"
                 url +=  "month/"+this.state.year+"-"+this.state.month
             }
             if(this.state.DaySelect){
+                dateArg="date"
                 url +=  "date/"+this.state.year+"-"+this.state.month+"-"+this.state.day
             }
             url += "?type=json"
@@ -200,17 +207,23 @@ class Main extends Component {
         }).then((response) =>  response.json())
         .then(json => {    
             
-            console.log("Response json:",json);
-            ReactDOM.render(this.createGraph(),document.getElementById('graph')) 
+            console.log("IM HERE:",json);
+            if(json.length>0){
+                ReactDOM.render(this.createGraph(json,dateArg),document.getElementById('graph')) 
+            }
+            else{
+                alert("There is no Data for your request")
+                ReactDOM.render(<div></div>,document.getElementById('graph'))
+            }
             
-     
+    
 
         }); 
 
     }
     fakeSubmit(){
      
-        let url = "https://localhost:8765/energy/api/ActualTotalLoad/Greece/PT60M/date/2018-1-1?type=json"
+        let url = "https://localhost:8765/energy/api/AggregatedGenerationPerType/Greece/AllTypes/PT60M/date/2018-1-1?type=json"
         fetch(url,{
             method: 'GET',
             headers: {
@@ -221,17 +234,17 @@ class Main extends Component {
         .then(json => {    
             
             console.log("Response json:",json);
-            ReactDOM.render(this.createGraph(json),document.getElementById('graph')) 
             
      
 
         }); 
     }
 
-    createGraph(file){
-        return( <SimpleGraph input = {file}/>)
+    createGraph(file,dateArg){
+        return( <SimpleGraph date = {dateArg} input = {file}/>)
       
     }
+
 
     render(){
         return (
@@ -268,7 +281,7 @@ class Main extends Component {
                                     <td></td><td></td>
                                     <td><button onClick = {this.handleSubmit} style = {btnStyle} className="btn btn-info">Submit</button></td>
                                 </tr>
-                                <tr><td><button onClick = {this.fakeSubmit} style = {btnStyle} className="btn btn-info">Submit</button></td></tr>
+                                {/*<tr><td><button onClick = {this.fakeSubmit} style = {btnStyle} className="btn btn-info">Submit</button></td></tr>*/}
 
                         </tbody>
                     </Table>

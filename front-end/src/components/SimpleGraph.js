@@ -13,13 +13,13 @@ export default class SimpleGraph extends Component {
             },
             xaxis: {
             
-              categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+              categories: []
             }
           },
           series: [
             {
-              name: "series-1",
-              data: [30, 40, 45, 50, 49, 60, 70, 91]
+              name: "",
+              data: []
             }
           ]
         };
@@ -27,71 +27,168 @@ export default class SimpleGraph extends Component {
 
       componentDidMount(){
         console.log(this.props.input[0].Dataset)
-          if(this.props.input[0].Dataset==="ActualTotalLoad"){
+        
+          if(this.props.date==="date"){
             this.setState({
                 options:{
                     xaxis:{
                         categories:this.props.input.map(jobject=>jobject.DateTimeUTC.substring(11,16))
                     }
-                },
-                
-                series: [{
-                    name: this.props.input[0].Dataset,
-                    data: this.props.input.map(jobject =>jobject.ActualTotalLoadValue)
-                }]   
-            })
-          }
-          if(this.props.input[0].Dataset==="DayAheadTotalLoadForecast"){
-            this.setState({
-                options:{
-                    xaxis:{
-                        categories:this.props.input.map(jobject=>jobject.DateTimeUTC.substring(11,16))
-                    }
-                },
-                
-                series: [{
-                    name: this.props.input[0].Dataset,
-                    data: this.props.input.map(jobject =>jobject.DayAheadTotalLoafForecastValue)
-                }]   
-            })
-          }
-          if(this.props.input[0].Dataset==="ActualVSForecastedTotalLoad"){
-            this.setState({
-                options:{
-                    xaxis:{
-                        categories:this.props.input.map(jobject=>jobject.DateTimeUTC.substring(11,16))
-                    }
-                },
-                
-                series: [
-                    {
-                        name: "Actual Total Load",
+                }
+              })
+            if(this.props.input[0].Dataset==="ActualTotalLoad"){
+                this.setState({
+                    
+                    
+                    series: [{
+                        name: this.props.input[0].Dataset,
                         data: this.props.input.map(jobject =>jobject.ActualTotalLoadValue)
-                    },
-                    {
-                        name: "Day Ahead Forecast",
+                    }]   
+                })
+              }
+              if(this.props.input[0].Dataset==="DayAheadTotalLoadForecast"){
+                this.setState({
+                    
+                    series: [{
+                        name: this.props.input[0].Dataset,
                         data: this.props.input.map(jobject =>jobject.DayAheadTotalLoafForecastValue)
-                    }
-                ]   
-            }) 
+                    }]   
+                })
+              }
+              if(this.props.input[0].Dataset==="ActualVSForecastedTotalLoad"){
+                this.setState({
+                    
+                    series: [
+                        {
+                            name: "Actual Total Load",
+                            data: this.props.input.map(jobject =>jobject.ActualTotalLoadValue)
+                        },
+                        {
+                            name: "Day Ahead Forecast",
+                            data: this.props.input.map(jobject =>jobject.DayAheadTotalLoafForecastValue)
+                        }
+                    ]   
+                }) 
+              }  
+              if(this.props.input[0].Dataset==="AggregatedGenerationPerType"){
+                this.setState({
+                    
+                    series: [
+                        {
+                            name: "Actual Total Load",
+                            data: this.props.input.map(jobject =>jobject.AggregatedGenerationPerType)
+                        }
+                    ]   
+                }) 
+              }
           }
-            
-          if(this.props.input[0].Dataset==="AggregatedGenerationPerType"){
+          if(this.props.date==="month"){
             this.setState({
                 options:{
                     xaxis:{
-                        categories:this.props.input.map(jobject=>jobject.DateTimeUTC.substring(11,16))
+                        categories:this.props.input.map(jobject=>jobject.Day)
                     }
-                },
-                
-                series: [
-                    {
-                        name: "Actual Total Load",
-                        data: this.props.input.map(jobject =>jobject.AggregatedGenerationPerType)
-                    }
-                ]   
-            }) 
+                }
+              })
+            if(this.props.input[0].Dataset==="ActualTotalLoad"){
+                this.setState({
+                    
+                    
+                    series: [{
+                        name: this.props.input[0].Dataset,
+                        data: this.props.input.map(jobject =>jobject.ActualTotalLoadByDayValue)
+                    }]   
+                })
+              }
+              if(this.props.input[0].Dataset==="DayAheadTotalLoadForecast"){
+                this.setState({
+                    
+                    series: [{
+                        name: this.props.input[0].Dataset,
+                        data: this.props.input.map(jobject =>jobject.DayAheadTotalLoafForecastByDayValue)
+                    }]   
+                })
+              }
+              if(this.props.input[0].Dataset==="ActualVSForecastedTotalLoad"){
+                this.setState({
+                    
+                    series: [
+                        {
+                            name: "Actual Total Load",
+                            data: this.props.input.map(jobject =>jobject.ActualTotalLoadByDayValue)
+                        },
+                        {
+                            name: "Day Ahead Forecast",
+                            data: this.props.input.map(jobject =>jobject.DayAheadTotalLoafForecastByDayValue)
+                        }
+                    ]   
+                }) 
+              }  
+              if(this.props.input[0].Dataset==="AggregatedGenerationPerType"){
+                this.setState({
+                    
+                    series: [
+                        {
+                            name: "Aggrigated "+this.props.input[0].ProductionType,
+                            data: this.props.input.map(jobject =>jobject.ActualGenerationOutputByDayValue )
+                        }
+                    ]   
+                }) 
+              }
           }
+          if(this.props.date==="year"){
+            this.setState({
+                options:{
+                    xaxis:{
+                        categories:this.props.input.map(jobject=>jobject.ActualTotalLoadByMonthValue)
+                    }
+                }
+              })
+            if(this.props.input[0].Dataset==="ActualTotalLoad"){
+                this.setState({     
+                    series: [{
+                        name: this.props.input[0].Dataset,
+                        data: this.props.input.map(jobject =>jobject.ActualTotalLoadByMonthValue)
+                    }]   
+                })
+              }
+              if(this.props.input[0].Dataset==="DayAheadTotalLoadForecast"){
+                this.setState({
+                    
+                    series: [{
+                        name: this.props.input[0].Dataset,
+                        data: this.props.input.map(jobject =>jobject.DayAheadTotalLoafForecastByMonthValue)
+                    }]   
+                })
+              }
+              if(this.props.input[0].Dataset==="ActualVSForecastedTotalLoad"){
+                this.setState({
+                    
+                    series: [
+                        {
+                            name: "Actual Total Load",
+                            data: this.props.input.map(jobject =>jobject.ActualTotalLoadByMonthValue)
+                        },
+                        {
+                            name: "Day Ahead Forecast",
+                            data: this.props.input.map(jobject =>jobject.DayAheadTotalLoafForecastByMonthValue)
+                        }
+                    ]   
+                }) 
+              }  
+              if(this.props.input[0].Dataset==="AggregatedGenerationPerType"){
+                this.setState({
+                    
+                    series: [
+                        {
+                            name: "Actual Total Load",
+                            data: this.props.input.map(jobject =>jobject.AggregatedGenerationPerTypeByMonthValue)
+                        }
+                    ]   
+                }) 
+              }
+          }
+          
           
 
           console.log( )
@@ -100,6 +197,7 @@ export default class SimpleGraph extends Component {
 
     
     render() {
+        console.log("Rendet Graph")
         return (
             <div className="app">
                 <div className="row">

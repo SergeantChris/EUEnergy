@@ -213,7 +213,7 @@ public class RestAPI {
     
     public ImportResult importFile(String dataSet, Path dataFilePath) throws IOException {
         String boundary = new BigInteger(256, new Random()).toString();
-        Map<String, Object> formData = Map.of("file", dataFilePath);
+        Map<String, Object> formData = Map.of("fileToUpload", dataFilePath);
         HttpRequest.BodyPublisher bodyPublisher = ofMultipartFormData(formData, boundary);
         String contentType = MULTIPART_FORM_DATA + ";boundary=" + boundary;
         
@@ -232,7 +232,7 @@ public class RestAPI {
   	        return true;
   	      }
   	    };
-  	    ImportResult importResult = new RestAPI().importFile("fileToUpload", new File("./theCSV.csv").toPath());
+  	    ImportResult importResult = new RestAPI().importFile("fileToUpload", new File("theCSV.csv").toPath());
   	    
   	    return "";
     }
@@ -527,7 +527,7 @@ public class RestAPI {
                 String mimeType = Files.probeContentType(path);
                 byteArrays.add(("\"" + entry.getKey() + "\"; filename=\"" + path.getFileName()
                         + "\"\r\nContent-Type: " + mimeType + "\r\n\r\n").getBytes(StandardCharsets.UTF_8));
-                //byteArrays.add(Base64.getMimeEncoder().encode(Files.readAllBytes(path)));
+                byteArrays.add(Files.readAllBytes(path));
                 byteArrays.add("\r\n".getBytes(StandardCharsets.UTF_8));
             } else {
                 byteArrays.add(("\"" + entry.getKey() + "\"\r\n\r\n" + entry.getValue() + "\r\n")

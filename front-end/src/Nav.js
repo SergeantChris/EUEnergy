@@ -6,9 +6,8 @@ const css = {
     width:'100%',
     paddingLeft: 40,
     paddingRight: 40
-    
-
 }
+
 
 /*
  * This is a React component, realized as function.
@@ -61,7 +60,6 @@ const UserAvatar = props => {
 class Nav extends Component {    
     
     render() {
-        console.log("Nav Props:",this.props)
         return (            
             <div className="row" >
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark" style={css}>

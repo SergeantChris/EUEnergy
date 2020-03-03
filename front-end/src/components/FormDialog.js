@@ -1,10 +1,10 @@
 import React, {Component}from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+//import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+//import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import  Dropdown, { DropArea, DropPType }  from './Dropdown';
 
@@ -24,11 +24,14 @@ export default class FormDialog extends Component {
 		this.state = {
 			open: true,
 			area: "",
-			type: ""
+			type: "",
+			productionType: ""
 		}
 		this.handleClickOpen = this.handleClickOpen.bind(this)
 		this.handleClose = this.handleClose.bind(this)
 		this.handleOk = this.handleOk.bind(this)
+		this.setArea = this.setArea.bind(this)
+		this.setType = this.setType.bind(this)
 	
 	}
 	handleClickOpen(){
@@ -47,14 +50,24 @@ export default class FormDialog extends Component {
 		  })
 		console.log(this.state.area)
 	};
-	setArea = (childData) => {this.setState({area: childData})};
-	setType = (childData) => {this.setState({type: childData})};
+	setArea = (childData) => {
+		console.log("Area:", childData)
+		this.setState({area: childData})
+	};
+	setType = (childData) => {
+		console.log("Type:", childData)
+		this.setState({type: childData})}
 		
+	setArea = (childData) => {
+		console.log("ProductionType:", childData)
+		this.setState({productionType: childData})
+	};
 
 	
 	render() {
 		return (
 			<React.Fragment>
+				<Dropdown value = {this.setPType} type = "ProductionType" />
 				<Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
 					New Request
 				</Button>
@@ -63,12 +76,14 @@ export default class FormDialog extends Component {
 					<DialogContent>
 						<Dropdown  value = {this.setType} type = "Type" />
 					</DialogContent>
+					{this.state.type==="AggregatedGenerationPerType"?
+					<DialogContent>
+						<Dropdown value = {this.setPType} type = "ProductionType" />
+					</DialogContent>:null}
 					<DialogContent>
 						<Dropdown value = {this.setArea} type = "Area" />
 					</DialogContent>
-					<DialogContent >					
-						<DropPType /> 
-					</DialogContent>
+					
 					<DialogActions>
 						<Button onClick={this.handleClose} color="primary">
 							Cancel

@@ -1,0 +1,15 @@
+.Select {
+    width: 444px !important;
+    z-index: 0 !important;
+}
+
+.Select.is-open {
+    margin: 15px;
+    z-index: 1200 !important;
+}
+
+.Select-menu {
+    position: fixed !important;
+    width: 500px !important;
+    margin: 1px;
+}

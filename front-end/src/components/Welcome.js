@@ -12,26 +12,28 @@ export class Welcome extends Component {
     render() {
         console.log("Welcome Props",this.props)
         return (
-            <Table >
-                <tbody>
-                    <tr>    
-                        <UserConsumer>
+            <div className="container">
+                <Table >
+                    <tbody>
+                        <tr>    
+                            <UserConsumer>
                                 { context => 
-                                    <React.Fragment>
-                                        <td>
-                                            <h1>Welcome </h1>
-                                            <p>This app helps you see the energy consumtion through out europe. Again checking the length of this line in each case:
-                                                logge in or not. This is small sooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo </p>
-                                            <p>{context.username?'':guest} </p>
-                                            {context.token}
-                                        </td>
-                                        {context.username?null:<td><Login navProps = {this.props}/></td>}
-                                    </React.Fragment>
-                                }
-                        </UserConsumer>    
-                    </tr>
-              </tbody>
-          </Table>
+                                        <React.Fragment>
+                                            <td>
+                                                <h1>Welcome </h1>
+                                                <p>This app helps you see the energy consumtion through out europe. Again checking the length of this line in each case:
+                                                    logge in or not. This is small sooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo </p>
+                                                <p>{context.username?'':guest} </p>
+                                                {context.token}
+                                            </td>
+                                            {context.username?null:<td><Login navProps = {this.props}/></td>}
+                                        </React.Fragment>
+                                    }
+                            </UserConsumer>    
+                        </tr>
+                </tbody>
+            </Table>
+          </div>
         )
     }
 }

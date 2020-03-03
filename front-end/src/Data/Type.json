@@ -1,0 +1,18 @@
+[
+  {
+    "value": "ActualTotalLoad",
+    "label": "Actual total load"
+  },
+  {
+    "value": "AggregatedGenerationPerType",
+    "label": "Aggregated generation per type"
+  },
+  {
+    "value": "DayAheadTotalLoadForecast",
+    "label": "Day ahead total load"
+  },
+  {
+    "value": "ActualvsForcasted",
+    "label": "Actual VS Forcasted"
+  }
+]

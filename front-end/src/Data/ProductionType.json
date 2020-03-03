@@ -70,5 +70,9 @@
     {
         "value": 18,
         "label": "Other"
+    },
+    {
+        "value": 20,
+        "label": "AllTypes"
     }
   ]

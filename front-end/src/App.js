@@ -3,10 +3,10 @@ import { HashRouter as Router, Route, Redirect } from "react-router-dom";
 import './App.css';
 import Nav from './Nav';
 import Main from './Main';
-import Footer from './Footer';
+//import Footer from './Footer';
 import { Logout } from './Auth';
 import { UserProvider } from './UserContext';
-import Welcome from './components/Welcome'
+import Welcome from './components/Welcome';
 
 class App extends Component {
 
@@ -17,7 +17,11 @@ class App extends Component {
       username: props.userData.username,
       style: {
         backgroundColor:'#fff',
-        height:'100vh'
+        height:'93vh'
+      },
+      mainStyle:{
+        width:'100vh',
+        paddingTop:20
       },
       setUserData: (token, username) => this.setState({
         token: token,
@@ -37,11 +41,12 @@ class App extends Component {
 
   render() {
     return (
-        <div style={this.state.style}>
+      <div >
+        <div  style={this.state.style}>
           <UserProvider value={this.state}>
             <Router>
               <Nav />
-              <div className = "container" style ={cont}>
+              <div className = "container" style={this.state.mainStyle}>
                 <Route path="/" exact component = {Welcome} />
                 <Route path="/main" render={this.renderProtectedComponent(Main)} />
                 {/*<Route path="/login" component={Login} />*/}
@@ -49,13 +54,13 @@ class App extends Component {
               </div>
             </Router>
           </UserProvider>
+          
+          </div>
         </div>
     );
   }
 }
 
-const cont = {
-  paddingTop:20
-}
+
 
 export default App;

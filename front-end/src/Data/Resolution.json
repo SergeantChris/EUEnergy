@@ -1,0 +1,14 @@
+[
+    {
+        "value" : 1,
+        "label":"PT15M"
+    },
+    {
+        "value" : 2,
+        "label":"PT30M"
+    },
+    {
+        "value" : 3,
+        "label":"PT60M"
+    }
+]

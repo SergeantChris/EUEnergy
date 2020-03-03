@@ -1,45 +1,85 @@
 import Select from 'react-select';
-import Area from './Area.json'
-import Type from './Type.json'
-import PType from './ProductionType'
+import Area from '../Data/Area.json'
+import Type from '../Data/Type.json'
+import PType from '../Data/ProductionType'
+import Resolution from '../Data/Resolution'
 import React, { Component } from 'react'
+import Year from '../Data/Year'
+import Month from '../Data/Month'
+import Day29 from '../Data/Day29'
+import Day30 from '../Data/Day30'
+import Day31 from '../Data/Day31'
+
+import  './Select.css';
 
 
+//const AreaDescreption  = ""
+//const ProductionTypeDescription = ""
+//const TypeDescription = ""
 
+const selectStyle = {
+    width:350,
+    padding: 10,
+    textAlign: ' justify',
+    justifyContent: 'space-between',
+}
 
 
 class Dropdown extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            value: ""
+            value:"",
+            label:""
         }
         this.handleChange = this.handleChange.bind(this)
         this.sendData = this.sendData.bind(this)
     }
     
     sendData = () => {
-        this.props.parentCallback(this.state.value);
-    };
+        this.props.value(this.state.value,this.state.label);
+    }; 
     handleChange(inputValue){
-        console.log(inputValue.label)
-        this.setState({value: inputValue.label})
-        this.sendData()
+        //console.log("Label: ",inputValue.label)
+        this.setState({value: inputValue.value,label:inputValue.label},() => this.sendData())
     }
-
 
 
     
     render() {
         switch (this.props.type) {
             case "Type":
-                this.list = Type
+                this.list = Type;
                 break;
             case "Area":
-                this.list = Area
+                this.list = Area;
+                break;
+            case "ProductionType":
+                this.list = PType;
+                break;
+            case "Resolution":
+                this.list = Resolution;
+                break;
+            case "Year":
+                this.list = Year;
+                break;
+            case "Month":
+                this.list = Month;
+                break;
+            case "Day":
+                switch (this.props.month) {
+                    case "29":
+                        this.list = Day29;
+                        break;
+                    case "30":
+                        this.list = Day30;
+                        break;
+                    default:
+                        this.list = Day31;
+                        break;
+                }
                 break;
             default:
-                this.list = Type
                 break;
         }
 
@@ -49,12 +89,10 @@ class Dropdown extends Component {
           onChange = {this.handleChange}
           className="basic-single"
           classNamePrefix="select"
-          defaultValue={this.list[0]}
-          name="type"
           options={this.list}
         />
-        This could have been a nice place to import information about the above selection for example. I am not sure wet, but we could definately do it. Also, this test sould be updated in case of emergency. Just kidding. It sould be updated on falase selection. It could also contain a definition of the above selections.
 
+        
     </div>
         
     }
@@ -62,6 +100,10 @@ class Dropdown extends Component {
 
 
 export default Dropdown
+
+
+
+
 /*
 let list
  
@@ -94,16 +136,8 @@ const Dropdown = React.forwardRef((props,ref) => {
 })
 
 export default Dropdown 
-*/
-const selectStyle = {
-    width:500,
-    paddingRight: 30,
-    paddingLeft: 30,
-    height: 250,
-    padding: '0.16666666666667em 0.5em',
-    textAlign: 'center',
-    justifyContent: 'space-between'
-}
+
+
 
 //-------------------------------------------------------------------------------------------------------
 export class DropArea extends Component {
@@ -160,3 +194,4 @@ export class DropPType extends Component {
         )
     }
 }
+*/

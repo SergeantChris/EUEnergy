@@ -9,6 +9,10 @@ function tripler(i) {
     return i * 3;
 }
 
+const styleFooter ={
+    width:'100vh'
+}
+
 class Footer extends Component {
     
     constructor(props) {

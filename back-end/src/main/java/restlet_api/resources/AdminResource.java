@@ -51,7 +51,7 @@ public class AdminResource extends PowerResource{
 	}
 	
 	@Put
-	public String getPut() {
+	public String getPut(Representation e) {
 		String action = getMandatoryAttribute("Action", "Action");
 		String res = "";
 		String token = getRequest().getHeaders().getFirstValue("Token");
@@ -68,7 +68,7 @@ public class AdminResource extends PowerResource{
 	}
 	
 	@Get
-	public String getGet() {
+	public String getGet(Representation e) {
 		String action = getMandatoryAttribute("Action", "Action");
 		String res = "";
 		String token = getRequest().getHeaders().getFirstValue("Token");
